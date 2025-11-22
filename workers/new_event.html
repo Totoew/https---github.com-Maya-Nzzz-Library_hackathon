@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление мероприятиями - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #faf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(175, 135, 75, 0.1);
+            border: 1px solid #e8dfd0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background: #fefcf8;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f5f1e9;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #c8b8a0;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b8a17a;
+        }
+        
+        /* Табы */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e8dfd0;
+            padding-bottom: 15px;
+        }
+        
+        .tab {
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f5f1e9;
+            color: #8c7b63;
+            border: 1px solid transparent;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        /* Кнопка создания */
+        .create-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(156, 138, 107, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .create-btn:hover {
+            background: linear-gradient(135deg, #9c8a6b, #8c7b63);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 138, 107, 0.3);
+        }
+        
+        /* Список мероприятий */
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-card {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #e8dfd0;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 184, 160, 0.15);
+        }
+        
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .event-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 6px;
+        }
+        
+        .event-date {
+            font-size: 14px;
+            color: #a69984;
+            font-weight: 500;
+        }
+        
+        .event-participants {
+            background: #b8a17a;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .event-description {
+            font-size: 14px;
+            color: #6d604c;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .event-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .event-action-btn.primary {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        .event-action-btn.secondary {
+            background: linear-gradient(135deg, #d8cebc, #c8b8a0);
+            color: #5d5240;
+        }
+        
+        .event-action-btn.danger {
+            background: linear-gradient(135deg, #e57373, #ef5350);
+            color: white;
+        }
+        
+        /* Форма создания мероприятия */
+        .form-section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6d604c;
+            margin-bottom: 6px;
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d8cebc;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+            color: #5d5240;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #b8a17a;
+            box-shadow: 0 0 0 3px rgba(184, 161, 122, 0.15);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        /* Список участников */
+        .participants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .participant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e8dfd0;
+        }
+        
+        .participant-info {
+            flex: 1;
+        }
+        
+        .participant-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8c7b63;
+            margin-bottom: 2px;
+        }
+        
+        .participant-contact {
+            font-size: 12px;
+            color: #a69984;
+        }
+        
+        .participant-status {
+            background: #81c784;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 350px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: linear-gradient(135deg, #d8cebc, #c8b8a0);
+            color: #5d5240;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(156, 138, 107, 0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Состояния */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a69984;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Основной экран -->
+    <div class="screen" id="mainScreen">
+        <div class="header">
+            <div class="header-title">Управление мероприятиями</div>
+            <div class="header-icons">
+                <span>📅</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Табы -->
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('events')">Мероприятия</div>
+                <div class="tab" onclick="switchTab('participants')">Участники</div>
+            </div>
+            
+            <!-- Кнопка создания -->
+            <button class="create-btn" onclick="openCreateModal()">
+                ➕ Создать мероприятие
+            </button>
+            
+            <!-- Список мероприятий -->
+            <div id="eventsTab">
+                <div class="events-list" id="eventsList">
+                    <!-- Мероприятия будут добавляться динамически -->
+                </div>
+            </div>
+            
+            <!-- Список участников -->
+            <div id="participantsTab" style="display: none;">
+                <div class="form-section">
+                    <div class="section-title">
+                        <span>👥</span>
+                        Участники мероприятий
+                    </div>
+                    <div class="participants-list" id="participantsList">
+                        <!-- Участники будут добавляться динамически -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания мероприятия -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Создание мероприятия</div>
+                <button class="close-btn" onclick="closeCreateModal()">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Название мероприятия *</label>
+                    <input type="text" class="form-input" id="eventTitle" placeholder="Введите название">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Описание</label>
+                    <textarea class="form-textarea" id="eventDescription" placeholder="Опишите мероприятие..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Дата *</label>
+                        <input type="date" class="form-input" id="eventDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Время *</label>
+                        <input type="time" class="form-input" id="eventTime">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Место проведения</label>
+                    <input type="text" class="form-input" id="eventLocation" placeholder="Например, Читальный зал">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Макс. участников</label>
+                        <input type="number" class="form-input" id="eventMaxParticipants" value="30" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Тип мероприятия</label>
+                        <select class="form-select" id="eventType">
+                            <option value="lecture">Лекция</option>
+                            <option value="workshop">Мастер-класс</option>
+                            <option value="meeting">Встреча</option>
+                            <option value="discussion">Обсуждение</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" onclick="closeCreateModal()">Отмена</button>
+                    <button class="modal-btn primary" onclick="createEvent()">Создать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно управления мероприятием -->
+    <div class="modal" id="manageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="manageModalTitle">Управление мероприятием</div>
+                <button class="close-btn" onclick="closeManageModal()">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="section-title">
+                        <span>📊</span>
+                        Статистика
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="form-label">Записалось</div>
+                            <div class="form-input" style="background: #f5f1e9; border: none;" id="currentParticipants">0</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">Свободно мест</div>
+                            <div class="form-input" style="background: #f5f1e9; border: none;" id="freeSlots">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <span>🔗</span>
+                        Ссылка для регистрации
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="registrationLink" readonly value="https://library14.ru/events/register/">
+                        <button class="event-action-btn primary" onclick="copyRegistrationLink()" style="margin-top: 10px; width: 100%;">
+                            📋 Скопировать ссылку
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <span>📧</span>
+                        Рассылка
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-action-btn primary" onclick="sendReminders()">
+                            📨 Напомнить участникам
+                        </button>
+                        <button class="event-action-btn secondary" onclick="sendLinks()">
+                            🔗 Разослать ссылки
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn danger" onclick="cancelEvent()">Отменить мероприятие</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Данные мероприятий
+        let events = [
+            {
+                id: 1,
+                title: "Литературный вечер",
+                description: "Обсуждение современной поэзии и прозы",
+                date: "2024-12-25",
+                time: "15:00",
+                location: "Читальный зал",
+                maxParticipants: 25,
+                currentParticipants: 12,
+                type: "discussion",
+                status: "active"
+            },
+            {
+                id: 2,
+                title: "Мастер-класс по скорочтению",
+                description: "Техники быстрого чтения и запоминания",
+                date: "2024-12-28",
+                time: "18:00",
+                location: "Конференц-зал",
+                maxParticipants: 15,
+                currentParticipants: 8,
+                type: "workshop",
+                status: "active"
+            }
+        ];
+
+        // Данные участников
+        let participants = [
+            { id: 1, eventId: 1, name: "Иванов Иван", phone: "+7 (912) 345-67-89", status: "confirmed" },
+            { id: 2, eventId: 1, name: "Петрова Мария", phone: "+7 (923) 456-78-90", status: "confirmed" },
+            { id: 3, eventId: 2, name: "Сидоров Алексей", phone: "+7 (934) 567-89-01", status: "pending" }
+        ];
+
+        // Переключение табов
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('eventsTab').style.display = 'none';
+            document.getElementById('participantsTab').style.display = 'none';
+            
+            if (tabName === 'events') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('eventsTab').style.display = 'block';
+                renderEvents();
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('participantsTab').style.display = 'block';
+                renderParticipants();
+            }
+        }
+
+        // Рендер мероприятий
+        function renderEvents() {
+            const eventsList = document.getElementById('eventsList');
+            
+            if (events.length === 0) {
+                eventsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <div>Нет мероприятий</div>
+                        <div style="font-size: 14px; margin-top: 8px;">Создайте первое мероприятие</div>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsList.innerHTML = events.map(event => `
+                <div class="event-card">
+                    <div class="event-header">
+                        <div>
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-date">${formatDate(event.date)} ${event.time} • ${event.location}</div>
+                        </div>
+                        <div class="event-participants">${event.currentParticipants}/${event.maxParticipants}</div>
+                    </div>
+                    <div class="event-description">${event.description}</div>
+                    <div class="event-actions">
+                        <button class="event-action-btn primary" onclick="manageEvent(${event.id})">
+                            🛠️ Управление
+                        </button>
+                        <button class="event-action-btn secondary" onclick="editEvent(${event.id})">
+                            ✏️ Редактировать
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Рендер участников
+        function renderParticipants() {
+            const participantsList = document.getElementById('participantsList');
+            
+            if (participants.length === 0) {
+                participantsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">👥</div>
+                        <div>Нет участников</div>
+                    </div>
+                `;
+                return;
+            }
+
+            participantsList.innerHTML = participants.map(participant => {
+                const event = events.find(e => e.id === participant.eventId);
+                return `
+                    <div class="participant-item">
+                        <div class="participant-info">
+                            <div class="participant-name">${participant.name}</div>
+                            <div class="participant-contact">${participant.phone} • ${event?.title || 'Неизвестно'}</div>
+                        </div>
+                        <div class="participant-status" style="background: ${participant.status === 'confirmed' ? '#81c784' : '#ffb74d'}">
+                            ${participant.status === 'confirmed' ? 'Подтвержден' : 'Ожидает'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Форматирование даты
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+
+        // Открытие модального окна создания
+        function openCreateModal() {
+            document.getElementById('createModal').style.display = 'flex';
+            // Установка минимальной даты - сегодня
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').min = today;
+        }
+
+        // Закрытие модального окна создания
+        function closeCreateModal() {
+            document.getElementById('createModal').style.display = 'none';
+            // Очистка формы
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventMaxParticipants').value = '30';
+            document.getElementById('eventType').value = 'lecture';
+        }
+
+        // Создание мероприятия
+        function createEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+
+            if (!title || !date || !time) {
+                showNotification('Заполните обязательные поля', 'error');
+                return;
+            }
+
+            const newEvent = {
+                id: Date.now(),
+                title: title,
+                description: document.getElementById('eventDescription').value.trim(),
+                date: date,
+                time: time,
+                location: document.getElementById('eventLocation').value.trim() || 'Не указано',
+                maxParticipants: parseInt(document.getElementById('eventMaxParticipants').value),
+                currentParticipants: 0,
+                type: document.getElementById('eventType').value,
+                status: 'active'
+            };
+
+            events.push(newEvent);
+            closeCreateModal();
+            renderEvents();
+            showNotification('Мероприятие создано!', 'success');
+        }
+
+        // Управление мероприятием
+        function manageEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+
+            document.getElementById('manageModalTitle').textContent = `Управление: ${event.title}`;
+            document.getElementById('currentParticipants').textContent = event.currentParticipants;
+            document.getElementById('freeSlots').textContent = event.maxParticipants - event.currentParticipants;
+            document.getElementById('registrationLink').value = `https://library14.ru/events/register/${eventId}`;
+
+            document.getElementById('manageModal').style.display = 'flex';
+        }
+
+        // Закрытие модального окна управления
+        function closeManageModal() {
+            document.getElementById('manageModal').style.display = 'none';
+        }
+
+        // Копирование ссылки для регистрации
+        function copyRegistrationLink() {
+            const linkInput = document.getElementById('registrationLink');
+            linkInput.select();
+            navigator.clipboard.writeText(linkInput.value);
+            showNotification('Ссылка скопирована в буфер обмена', 'success');
+        }
+
+        // Рассылка напоминаний
+        function sendReminders() {
+            showNotification('Напоминания отправлены участникам', 'success');
+        }
+
+        // Рассылка ссылок
+        function sendLinks() {
+            showNotification('Ссылки для регистрации разосланы', 'success');
+        }
+
+        // Отмена мероприятия
+        function cancelEvent() {
+            if (confirm('Вы уверены, что хотите отменить мероприятие? Все участники будут уведомлены.')) {
+                showNotification('Мероприятие отменено', 'info');
+                closeManageModal();
+            }
+        }
+
+        // Редактирование мероприятия
+        function editEvent(eventId) {
+            showNotification('Редактирование мероприятия', 'info');
+            // Здесь можно открыть форму редактирования
+        }
+
+        // Показать уведомление
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? 
+                'linear-gradient(135deg, #c87c74, #b5655d)' : 
+                type === 'info' ? 
+                'linear-gradient(135deg, #8c7b63, #6d604c)' : 
+                'linear-gradient(135deg, #b8a17a, #9c8a6b)';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEvents();
+        });
+    </script>
+</body>
+</html>

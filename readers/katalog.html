@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека №14 - Книги</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #81C784;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #4CAF50;
+        }
+        
+        /* Поиск */
+        .search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            color: #4A4A4A;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7D7D7D;
+            font-size: 16px;
+        }
+        
+        /* Секции */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Топ 100 */
+        .top-books {
+            margin-bottom: 20px;
+        }
+        
+        .top-book-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .top-book-item:hover {
+            background: #E8F5E8;
+            transform: translateX(5px);
+        }
+        
+        .book-rank {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .top-book-info {
+            flex: 1;
+        }
+        
+        .top-book-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 2px;
+        }
+        
+        .top-book-author {
+            font-size: 12px;
+            color: #7D7D7D;
+            margin-bottom: 4px;
+        }
+        
+        .top-book-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #FF9800;
+        }
+        
+        .book-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .book-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+        
+        /* Результаты поиска */
+        .search-results {
+            margin-top: 20px;
+        }
+        
+        .book-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 12px;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .book-cover {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+            line-height: 1.2;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .book-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .book-author {
+            font-size: 13px;
+            color: #7D7D7D;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .book-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #FFD700;
+            color: #8B7500;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .book-description {
+            font-size: 12px;
+            color: #5A5A5A;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            /* Стандартное свойство */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            /* Для современных браузеров */
+            display: -moz-box;
+            -moz-line-clamp: 2;
+            -moz-box-orient: vertical;
+            display: box;
+            line-clamp: 2;
+            box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .book-status {
+            background: #81C784;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .book-status.available {
+            background: #4CAF50;
+        }
+        
+        .book-status.unavailable {
+            background: #f44336;
+        }
+        
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .book-action-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .book-action-btn:hover {
+            background: #45a049;
+        }
+        
+        .book-action-btn.secondary {
+            background: #81C784;
+        }
+        
+        .book-action-btn.secondary:hover {
+            background: #66BB6A;
+        }
+        
+        .book-action-btn:disabled {
+            background: #BDBDBD;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Скрытые элементы */
+        .hidden {
+            display: none;
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="header">
+            <div class="header-title">Книги</div>
+            <div class="header-icons">
+                <span>📚</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Поиск -->
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Поиск книг, авторов...">
+                    <div class="search-icon">🔍</div>
+                </div>
+            </div>
+            
+            <!-- Результаты поиска (скрыты по умолчанию) -->
+            <div class="search-results hidden" id="searchResults">
+                <div class="section-title">
+                    <span>🔍</span>
+                    Результаты поиска
+                </div>
+                <div id="searchResultsList">
+                    <!-- Результаты поиска будут здесь -->
+                </div>
+            </div>
+            
+            <!-- Топ 100 книг -->
+            <div class="top-books" id="topBooksSection">
+                <div class="section-title">
+                    <span>🏆</span>
+                    Топ 100 книг
+                </div>
+                
+                <div id="topBooksList">
+                    <!-- Топ книги будут сгенерированы JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные книг
+        const booksData = [
+            {
+                id: 1,
+                title: "Преступление и наказание",
+                author: "Фёдор Достоевский",
+                description: "Роман о бывшем студенте Родионе Раскольникове, который решается на убийство, чтобы проверить свою теорию о \"праве сильной личности\".",
+                rating: 4.8,
+                reviews: 1250,
+                status: "available",
+                coverText: "П и Н"
+            },
+            {
+                id: 2,
+                title: "Мастер и Маргарита",
+                author: "Михаил Булгаков",
+                description: "Мистический роман о визите дьявола в Москву 1930-х годов и истории любви Мастера и Маргариты.",
+                rating: 4.9,
+                reviews: 980,
+                status: "available",
+                coverText: "М и М"
+            },
+            {
+                id: 3,
+                title: "1984",
+                author: "Джордж Оруэлл",
+                description: "Антиутопический роман о тоталитарном обществе под постоянным контролем \"Большого Брата\".",
+                rating: 4.7,
+                reviews: 1560,
+                status: "unavailable",
+                coverText: "1984"
+            },
+            {
+                id: 4,
+                title: "Война и мир",
+                author: "Лев Толстой",
+                description: "Эпический роман, охватывающий период наполеоновских войн и жизнь нескольких аристократических семей.",
+                rating: 4.6,
+                reviews: 890,
+                status: "available",
+                coverText: "В и М"
+            },
+            {
+                id: 5,
+                title: "Три товарища",
+                author: "Эрих Мария Ремарк",
+                description: "Роман о дружбе трёх фронтовых товарищей в Германии после Первой мировой войны.",
+                rating: 4.8,
+                reviews: 670,
+                status: "available",
+                coverText: "Т Т"
+            },
+            {
+                id: 6,
+                title: "Гарри Поттер и философский камень",
+                author: "Джоан Роулинг",
+                description: "Первая книга о юном волшебнике Гарри Поттере и его приключениях в школе Хогвартс.",
+                rating: 4.9,
+                reviews: 2450,
+                status: "available",
+                coverText: "Г П"
+            },
+            {
+                id: 7,
+                title: "Тонкое искусство пофигизма",
+                author: "Марк Мэнсон",
+                description: "Провокационная книга о том, как перестать пытаться быть позитивным всегда и вместо этого стать лучше.",
+                rating: 4.5,
+                reviews: 3200,
+                status: "unavailable",
+                coverText: "Т и П"
+            },
+            {
+                id: 8,
+                title: "Атлант расправил плечи",
+                author: "Айн Рэнд",
+                description: "Философский роман о борьбе творческих личностей против государственного регулирования.",
+                rating: 4.4,
+                reviews: 2100,
+                status: "available",
+                coverText: "А Р П"
+            },
+            {
+                id: 9,
+                title: "Маленький принц",
+                author: "Антуан де Сент-Экзюпери",
+                description: "Философская сказка о мальчике с другой планеты, который путешествует по вселенной.",
+                rating: 4.9,
+                reviews: 1890,
+                status: "available",
+                coverText: "М П"
+            },
+            {
+                id: 10,
+                title: "Убить пересмешника",
+                author: "Харпер Ли",
+                description: "Роман о расовой несправедливости и потере детской невинности в американском Юге.",
+                rating: 4.7,
+                reviews: 1340,
+                status: "available",
+                coverText: "У П"
+            }
+        ];
+
+        // Отображение топа книг
+        function renderTopBooks() {
+            const topBooksList = document.getElementById('topBooksList');
+            
+            // Сортируем книги по рейтингу
+            const topBooks = [...booksData]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 10);
+            
+            topBooksList.innerHTML = '';
+            
+            topBooks.forEach((book, index) => {
+                const bookElement = document.createElement('div');
+                bookElement.className = 'top-book-item fade-in';
+                bookElement.style.animationDelay = `${index * 0.1}s`;
+                
+                bookElement.innerHTML = `
+                    <div class="book-rank">${index + 1}</div>
+                    <div class="top-book-info">
+                        <div class="top-book-title">${book.title}</div>
+                        <div class="top-book-author">${book.author}</div>
+                        <div class="top-book-rating">
+                            ⭐ ${book.rating} • ${book.reviews} отзывов
+                        </div>
+                    </div>
+                    <button class="book-btn" onclick="reserveBook(${book.id})" style="padding: 6px 12px; font-size: 11px;">
+                        📚
+                    </button>
+                `;
+                
+                topBooksList.appendChild(bookElement);
+            });
+        }
+
+        // Поиск книг
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchResults = document.getElementById('searchResults');
+            const topBooksSection = document.getElementById('topBooksSection');
+            
+            if (!searchTerm) {
+                // Если поиск пустой, скрываем результаты и показываем топ
+                searchResults.classList.add('hidden');
+                topBooksSection.classList.remove('hidden');
+                return;
+            }
+            
+            // Показываем результаты поиска и скрываем топ
+            searchResults.classList.remove('hidden');
+            topBooksSection.classList.add('hidden');
+            
+            const filteredBooks = booksData.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm) ||
+                book.description.toLowerCase().includes(searchTerm)
+            );
+            
+            renderSearchResults(filteredBooks);
+        }
+
+        // Отображение результатов поиска
+        function renderSearchResults(books) {
+            const searchResultsList = document.getElementById('searchResultsList');
+            
+            searchResultsList.innerHTML = '';
+            
+            if (books.length === 0) {
+                searchResultsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: #7D7D7D;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🔍</div>
+                        <div style="font-size: 14px;">Ничего не найдено</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Попробуйте изменить поисковый запрос</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            books.forEach((book, index) => {
+                const bookElement = document.createElement('div');
+                bookElement.className = 'book-card fade-in';
+                bookElement.style.animationDelay = `${index * 0.1}s`;
+                
+                const statusClass = book.status === 'available' ? 'available' : 'unavailable';
+                const statusText = book.status === 'available' ? 'Доступна' : 'На руках';
+                
+                bookElement.innerHTML = `
+                    <div class="book-cover">${book.coverText}</div>
+                    <div class="book-info">
+                        <div class="book-header">
+                            <div style="flex: 1;">
+                                <div class="book-title">${book.title}</div>
+                                <div class="book-author">${book.author}</div>
+                            </div>
+                            <div class="book-rating">
+                                ⭐ ${book.rating}
+                            </div>
+                        </div>
+                        <div class="book-description">${book.description}</div>
+                        <div class="book-status ${statusClass}">${statusText}</div>
+                        <div class="book-actions">
+                            <button class="book-action-btn" onclick="reserveBook(${book.id})" ${book.status === 'unavailable' ? 'disabled' : ''}>
+                                ${book.status === 'available' ? '📚 Забронировать' : '❌ Недоступна'}
+                            </button>
+                            <button class="book-action-btn secondary" onclick="showBookDetails(${book.id})">
+                                ℹ️ Подробнее
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                searchResultsList.appendChild(bookElement);
+            });
+        }
+
+        // Бронирование книги
+        function reserveBook(bookId) {
+            const book = booksData.find(b => b.id === bookId);
+            
+            if (book.status === 'available') {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '⏳ Бронируем...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    button.textContent = '✅ Забронирована!';
+                    button.style.background = '#81C784';
+                    
+                    setTimeout(() => {
+                        alert(`Книга "${book.title}" успешно забронирована! Заберите её в библиотеке в течение 3 дней.`);
+                        button.textContent = originalText;
+                        button.style.background = '';
+                        button.disabled = false;
+                    }, 1000);
+                }, 1500);
+            }
+        }
+
+        // Просмотр деталей книги
+        function showBookDetails(bookId) {
+            const book = booksData.find(b => b.id === bookId);
+            alert(`
+📖 ${book.title}
+
+👤 Автор: ${book.author}
+
+⭐ Рейтинг: ${book.rating}/5 (${book.reviews} отзывов)
+
+📝 Описание: ${book.description}
+
+${book.status === 'available' ? '✅ Доступна для бронирования' : '❌ В настоящее время на руках у другого читателя'}
+            `);
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTopBooks();
+            
+            // Обработчик поиска
+            document.getElementById('searchInput').addEventListener('input', searchBooks);
+            
+            // Обработчик Enter в поиске
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBooks();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

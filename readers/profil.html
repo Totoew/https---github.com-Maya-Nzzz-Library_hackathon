@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #7D7D7D;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #81C784;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #4CAF50;
+        }
+        
+        /* Уведомления */
+        .notifications-section {
+            margin-bottom: 20px;
+        }
+        
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .notification-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4CAF50;
+            position: relative;
+        }
+        
+        .notification-card.unread {
+            background: #E8F5E8;
+            border-left-color: #FF9800;
+        }
+        
+        .notification-card.important {
+            background: #FFEBEE;
+            border-left-color: #f44336;
+        }
+        
+        .notification-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .notification-card.unread .notification-icon {
+            background: #FF9800;
+        }
+        
+        .notification-card.important .notification-icon {
+            background: #f44336;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        
+        .notification-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 4px;
+        }
+        
+        .notification-card.unread .notification-title {
+            color: #EF6C00;
+        }
+        
+        .notification-card.important .notification-title {
+            color: #C62828;
+        }
+        
+        .notification-time {
+            font-size: 11px;
+            color: #7D7D7D;
+            white-space: nowrap;
+        }
+        
+        .notification-text {
+            font-size: 13px;
+            color: #4A4A4A;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .notification-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .notification-btn:hover {
+            background: #45a049;
+        }
+        
+        .notification-btn.secondary {
+            background: #81C784;
+        }
+        
+        .notification-btn.secondary:hover {
+            background: #66BB6A;
+        }
+        
+        .unread-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 8px;
+            height: 8px;
+            background: #FF9800;
+            border-radius: 50%;
+        }
+        
+        /* Секции */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4A4A4A;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title.with-badge {
+            justify-content: space-between;
+        }
+        
+        .badge {
+            background: #f44336;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Профиль пользователя */
+        .profile-section {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .edit-avatar-btn {
+            position: absolute;
+            bottom: -5px;
+            right: 50%;
+            transform: translateX(50%);
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        
+        .profile-id {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-bottom: 15px;
+        }
+        
+        .edit-profile-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .edit-profile-btn:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+        
+        .profile-contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: #4A4A4A;
+            font-size: 14px;
+        }
+        
+        .contact-icon {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Статистика */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border-top: 3px solid #4CAF50;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #7D7D7D;
+        }
+        
+        /* Книги */
+        .books-section {
+            margin-bottom: 25px;
+        }
+        
+        .books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .book-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            transition: transform 0.2s ease;
+            border-left: 4px solid #81C784;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .book-cover {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .book-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 4px;
+        }
+        
+        .book-author {
+            font-size: 13px;
+            color: #7D7D7D;
+            margin-bottom: 8px;
+        }
+        
+        .book-status {
+            background: #81C784;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .book-status.warning {
+            background: #FF9800;
+        }
+        
+        .book-status.danger {
+            background: #f44336;
+        }
+        
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .book-detail {
+            font-size: 12px;
+            color: #7D7D7D;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #45a049;
+        }
+        
+        .action-btn.secondary {
+            background: #81C784;
+        }
+        
+        .action-btn.secondary:hover {
+            background: #66BB6A;
+        }
+        
+        /* Скрытые элементы */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7D7D7D;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="header">
+            <div class="header-title" id="headerTitle">Мой профиль</div>
+            <div class="header-icons">
+                <span>🔔</span>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab" onclick="showTab('profile')">Профиль</button>
+            <button class="nav-tab active" onclick="showTab('notifications')">Уведомления</button>
+        </div>
+        
+        <div class="content">
+            <!-- Вкладка уведомлений -->
+            <div class="tab-content active" id="notificationsTab">
+                <div class="notifications-section">
+                    <div class="section-title with-badge">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>🔔</span>
+                            Уведомления
+                        </div>
+                        <div class="badge" id="unreadCount">3 новых</div>
+                    </div>
+                    
+                    <div class="notifications-list" id="notificationsList">
+                        <!-- Уведомления будут сгенерированы JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка профиля -->
+            <div class="tab-content" id="profileTab">
+                <!-- Профиль пользователя -->
+                <div class="profile-section">
+                    <div class="avatar">
+                        ИИ
+                        <button class="edit-avatar-btn" onclick="openEditModal()">📷</button>
+                    </div>
+                    <div class="profile-name">Иван Иванов</div>
+                    <div class="profile-id">Читательский билет: #123456</div>
+                    
+                    <button class="edit-profile-btn" onclick="openEditModal()">
+                        <span>✏️</span>
+                        Редактировать профиль
+                    </button>
+                    
+                    <div class="profile-contacts">
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <div>+7 (912) 345-67-89</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div>ivanov@email.com</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🏠</div>
+                            <div>ул. Ленина, 25, кв. 14, Екатеринбург</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Статистика -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Книг прочитано</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">На руках</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Мероприятий</div>
+                    </div>
+                </div>
+                
+                <!-- Книги на руках -->
+                <div class="books-section">
+                    <div class="section-title">
+                        <span>📚</span>
+                        Книги на руках
+                    </div>
+                    
+                    <div class="books-list">
+                        <!-- Книга 1 -->
+                        <div class="book-card">
+                            <div class="book-cover">П и Н</div>
+                            <div class="book-info">
+                                <div class="book-header">
+                                    <div>
+                                        <div class="book-title">Преступление и наказание</div>
+                                        <div class="book-author">Ф.М. Достоевский</div>
+                                    </div>
+                                    <div class="book-status">На руках</div>
+                                </div>
+                                <div class="book-details">
+                                    <div class="book-detail">
+                                        <span>⏳</span>
+                                        Вернуть до: 20.12.2024
+                                    </div>
+                                </div>
+                                <div class="book-actions">
+                                    <button class="action-btn">Продлить</button>
+                                    <button class="action-btn secondary">Вернуть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Рекомендации -->
+            <div class="recommendations-section">
+                <div class="section-title">
+                    <span>⭐</span>
+                    Рекомендуем почитать
+                </div>
+                
+                <div class="books-list">
+                    <!-- Рекомендация 1 -->
+                    <div class="book-card">
+                        <div class="book-cover">ТМ</div>
+                        <div class="book-info">
+                            <div class="book-header">
+                                <div>
+                                    <div class="book-title">Три мушкетера</div>
+                                    <div class="book-author">Александр Дюма</div>
+                                </div>
+                                <div class="book-status">Доступна</div>
+                            </div>
+                            <div class="book-details">
+                                <div class="book-detail">
+                                    <span>📊</span>
+                                    Похоже на "Преступление и наказание"
+                                </div>
+                            </div>
+                            <div class="book-actions">
+                                <button class="action-btn">Забронировать</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные уведомлений
+        const notificationsData = [
+            {
+                id: 1,
+                type: 'return',
+                title: 'Скоро срок сдачи книги',
+                text: 'Книга "Преступление и наказание" должна быть возвращена до 20.12.2024',
+                time: '10 минут назад',
+                icon: '⏰',
+                unread: true,
+                actions: [
+                    { text: 'Продлить', type: 'primary' },
+                    { text: 'Посмотреть', type: 'secondary' }
+                ]
+            },
+            {
+                id: 2,
+                type: 'event',
+                title: 'Новое мероприятие',
+                text: 'Приглашаем на литературный вечер "Классики русской литературы" 25 декабря в 18:00',
+                time: '2 часа назад',
+                icon: '📅',
+                unread: true,
+                actions: [
+                    { text: 'Записаться', type: 'primary' },
+                    { text: 'Подробнее', type: 'secondary' }
+                ]
+            },
+            {
+                id: 3,
+                type: 'new_book',
+                title: 'Новая книга в библиотеке',
+                text: 'Поступила новинка: "Тонкое искусство пофигизма" - Марк Мэнсон',
+                time: '5 часов назад',
+                icon: '📚',
+                unread: true,
+                actions: [
+                    { text: 'Забронировать', type: 'primary' }
+                ]
+            },
+            {
+                id: 4,
+                type: 'system',
+                title: 'Обновление правил',
+                text: 'С 1 января изменятся сроки возврата книг. Теперь книги можно брать на 21 день',
+                time: 'Вчера',
+                icon: 'ℹ️',
+                unread: false,
+                actions: [
+                    { text: 'Подробнее', type: 'secondary' }
+                ]
+            },
+            {
+                id: 5,
+                type: 'event',
+                title: 'Напоминание о мероприятии',
+                text: 'Завтра в 15:00 состоится мастер-класс по скорочтению. Не забудьте!',
+                time: 'Вчера',
+                icon: '🎯',
+                unread: false,
+                actions: [
+                    { text: 'Напомнить позже', type: 'secondary' }
+                ]
+            },
+            {
+                id: 6,
+                type: 'important',
+                title: 'Важное уведомление',
+                text: 'Библиотека будет закрыта 31 декабря и 1 января на новогодние праздники',
+                time: '2 дня назад',
+                icon: '⚠️',
+                unread: false,
+                important: true,
+                actions: [
+                    { text: 'Понятно', type: 'primary' }
+                ]
+            }
+        ];
+
+        // Показать вкладку
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс со всех кнопок
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Сделать кнопку активной
+            event.target.classList.add('active');
+            
+            // Обновляем заголовок
+            document.getElementById('headerTitle').textContent = 
+                tabName === 'notifications' ? 'Уведомления' : 'Мой профиль';
+            
+            // Если открываем уведомления, обновляем список
+            if (tabName === 'notifications') {
+                renderNotifications();
+            }
+        }
+
+        // Отображение уведомлений
+        function renderNotifications() {
+            const notificationsList = document.getElementById('notificationsList');
+            const unreadCount = notificationsData.filter(n => n.unread).length;
+            
+            // Обновляем счетчик непрочитанных
+            document.getElementById('unreadCount').textContent = `${unreadCount} новых`;
+            
+            notificationsList.innerHTML = '';
+            
+            if (notificationsData.length === 0) {
+                notificationsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔔</div>
+                        <div class="empty-text">У вас пока нет уведомлений</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            notificationsData.forEach(notification => {
+                const notificationElement = document.createElement('div');
+                let cardClass = 'notification-card';
+                if (notification.unread) cardClass += ' unread';
+                if (notification.important) cardClass += ' important';
+                
+                notificationElement.className = cardClass;
+                notificationElement.onclick = () => markAsRead(notification.id);
+                
+                // Создаем кнопки действий
+                let actionsHTML = '';
+                if (notification.actions) {
+                    actionsHTML = `<div class="notification-actions">`;
+                    notification.actions.forEach(action => {
+                        const btnClass = action.type === 'primary' ? 'notification-btn' : 'notification-btn secondary';
+                        actionsHTML += `<button class="${btnClass}" onclick="handleNotificationAction(${notification.id}, '${action.text}')">${action.text}</button>`;
+                    });
+                    actionsHTML += `</div>`;
+                }
+                
+                notificationElement.innerHTML = `
+                    <div class="notification-icon">${notification.icon}</div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <div class="notification-title">${notification.title}</div>
+                            <div class="notification-time">${notification.time}</div>
+                        </div>
+                        <div class="notification-text">${notification.text}</div>
+                        ${actionsHTML}
+                    </div>
+                    ${notification.unread ? '<div class="unread-badge"></div>' : ''}
+                `;
+                
+                notificationsList.appendChild(notificationElement);
+            });
+        }
+
+        // Пометить как прочитанное
+        function markAsRead(notificationId) {
+            const notification = notificationsData.find(n => n.id === notificationId);
+            if (notification && notification.unread) {
+                notification.unread = false;
+                renderNotifications();
+            }
+        }
+
+        // Обработка действий уведомлений
+        function handleNotificationAction(notificationId, action) {
+            const notification = notificationsData.find(n => n.id === notificationId);
+            
+            // Визуальная обратная связь
+            event.stopPropagation();
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '⏳';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.textContent = '✅';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                    
+                    // Действия в зависимости от типа уведомления и действия
+                    switch(action) {
+                        case 'Продлить':
+                            alert(`Книга продлена! Новый срок возврата: 27.12.2024`);
+                            markAsRead(notificationId);
+                            break;
+                        case 'Записаться':
+                            alert('Вы успешно записаны на мероприятие!');
+                            markAsRead(notificationId);
+                            break;
+                        case 'Забронировать':
+                            alert('Книга забронирована для вас!');
+                            markAsRead(notificationId);
+                            break;
+                        case 'Посмотреть':
+                            // Переход к книгам
+                            showTab('profile');
+                            break;
+                        default:
+                            markAsRead(notificationId);
+                    }
+                }, 1000);
+            }, 1000);
+        }
+
+        // Функции профиля (заглушки)
+        function openEditModal() {
+            alert('Форма редактирования профиля');
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNotifications();
+            
+            // Анимация появления уведомлений
+            setTimeout(() => {
+                const notifications = document.querySelectorAll('.notification-card');
+                notifications.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-20px)';
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.5s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateX(0)';
+                    }, 100 * index);
+                });
+            }, 100);
+        });
+
+        // Обработчики для кнопок в профиле
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const action = this.textContent;
+                    const bookTitle = this.closest('.book-card').querySelector('.book-title').textContent;
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '⏳';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.textContent = '✅';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.disabled = false;
+                            alert(`${action} для "${bookTitle}" выполнено!`);
+                        }, 1000);
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека №14 - Панель управления</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #faf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(175, 135, 75, 0.1);
+            border: 1px solid #e8dfd0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f5f1e9;
+            border-bottom: 1px solid #e8dfd0;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8c7b63;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #6d604c;
+            border-bottom: 2px solid #b8a17a;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background: #fefcf8;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f5f1e9;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #c8b8a0;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b8a17a;
+        }
+        
+        /* Секции */
+        .section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Поиск */
+        .search-container {
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d8cebc;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+            color: #5d5240;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #b8a17a;
+        }
+        
+        /* Список пользователей */
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e8dfd0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 138, 107, 0.1);
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .user-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #8c7b63;
+            margin-bottom: 4px;
+        }
+        
+        .user-details {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .user-detail {
+            font-size: 11px;
+            color: #a69984;
+            font-weight: 500;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(156, 138, 107, 0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Скрытые элементы */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen" id="mainScreen">
+        <div class="header">
+            <div class="header-title" id="headerTitle">Библиотека №14</div>
+            <div class="header-icons">
+                <span>📚</span>
+            </div>
+        </div>
+        
+        
+        
+        <div class="content">
+            <!-- Вкладка всех пользователей -->
+            <div class="tab-content active" id="usersTab">
+                <div class="section">
+                    <div class="section-title">
+                        <span>👥</span>
+                        Список читателей
+                    </div>
+                    
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="userSearch" 
+                               placeholder="Поиск по ФИО..." oninput="filterUsers()">
+                    </div>
+                    
+                    <div class="users-list" id="usersList">
+                        <!-- Список пользователей будет сгенерирован JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Данные пользователей
+        const usersData = [
+            {
+                id: "LB12345678",
+                lastName: "Иванов",
+                firstName: "Иван",
+                middleName: "Иванович",
+                phone: "+7 (912) 345-67-89",
+                email: "ivanov@email.com",
+                address: "ул. Ленина, 25, кв. 14",
+                status: "Активен",
+                booksCount: 2
+            },
+            {
+                id: "LB12345679",
+                lastName: "Петрова",
+                firstName: "Мария",
+                middleName: "Сергеевна",
+                phone: "+7 (912) 345-67-90",
+                email: "petrova@email.com",
+                address: "ул. Мира, 10, кв. 5",
+                status: "Активен",
+                booksCount: 1
+            },
+            {
+                id: "LB12345680",
+                lastName: "Сидоров",
+                firstName: "Алексей",
+                middleName: "Петрович",
+                phone: "+7 (912) 345-67-91",
+                email: "sidorov@email.com",
+                address: "ул. Центральная, 15, кв. 12",
+                status: "Просрочка",
+                booksCount: 2
+            },
+            {
+                id: "LB12345681",
+                lastName: "Козлова",
+                firstName: "Елена",
+                middleName: "Владимировна",
+                phone: "+7 (912) 345-67-92",
+                email: "kozlova@email.com",
+                address: "ул. Школьная, 8, кв. 3",
+                status: "Активен",
+                booksCount: 0
+            },
+            {
+                id: "LB12345682",
+                lastName: "Николаев",
+                firstName: "Дмитрий",
+                middleName: "Александрович",
+                phone: "+7 (912) 345-67-93",
+                email: "nikolaev@email.com",
+                address: "ул. Садовая, 20, кв. 7",
+                status: "Активен",
+                booksCount: 1
+            },
+            {
+                id: "LB12345683",
+                lastName: "Федорова",
+                firstName: "Ольга",
+                middleName: "Игоревна",
+                phone: "+7 (912) 345-67-94",
+                email: "fedorova@email.com",
+                address: "ул. Парковая, 5, кв. 9",
+                status: "Активен",
+                booksCount: 0
+            },
+            {
+                id: "LB12345684",
+                lastName: "Васильев",
+                firstName: "Сергей",
+                middleName: "Михайлович",
+                phone: "+7 (912) 345-67-95",
+                email: "vasiliev@email.com",
+                address: "ул. Лесная, 12, кв. 4",
+                status: "Просрочка",
+                booksCount: 1
+            },
+            {
+                id: "LB12345685",
+                lastName: "Алексеева",
+                firstName: "Анна",
+                middleName: "Дмитриевна",
+                phone: "+7 (912) 345-67-96",
+                email: "alekseeva@email.com",
+                address: "ул. Молодежная, 18, кв. 11",
+                status: "Активен",
+                booksCount: 2
+            }
+        ];
+
+        // Показать вкладку
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс со всех кнопок
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Сделать кнопку активной
+            event.target.classList.add('active');
+            
+            // Если открываем вкладку пользователей, обновляем список
+            if (tabName === 'users') {
+                renderUsersList();
+            }
+        }
+
+        // Отображение списка пользователей
+        function renderUsersList(filteredUsers = null) {
+            const usersList = document.getElementById('usersList');
+            const usersToRender = filteredUsers || usersData;
+            
+            usersList.innerHTML = '';
+            
+            if (usersToRender.length === 0) {
+                usersList.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #a69984;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+                        <div>Пользователи не найдены</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            usersToRender.forEach(user => {
+                const fullName = `${user.lastName} ${user.firstName} ${user.middleName}`;
+                const avatar = user.lastName[0] + user.firstName[0];
+                
+                const userElement = document.createElement('div');
+                userElement.className = 'user-item';
+                userElement.onclick = () => selectUser(user);
+                
+                userElement.innerHTML = `
+                    <div class="user-avatar">${avatar}</div>
+                    <div class="user-info">
+                        <div class="user-name">${fullName}</div>
+                        <div class="user-details">
+                            <div class="user-detail">ID: ${user.id}</div>
+                            <div class="user-detail">📚 Книг: ${user.booksCount}</div>
+                            <div class="user-detail">${user.status}</div>
+                        </div>
+                    </div>
+                `;
+                
+                usersList.appendChild(userElement);
+            });
+        }
+
+        // Выбор пользователя
+        function selectUser(user) {
+            // Здесь можно добавить переход на страницу профиля пользователя
+            showNotification(`Выбран пользователь: ${user.lastName} ${user.firstName}`, 'success');
+            
+            // В реальном приложении здесь будет переход на страницу профиля
+            // window.location.href = `profile.html?id=${user.id}`;
+        }
+
+        // Фильтрация пользователей
+        function filterUsers() {
+            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+            
+            if (!searchTerm) {
+                renderUsersList();
+                return;
+            }
+            
+            const filteredUsers = usersData.filter(user => {
+                const fullName = `${user.lastName} ${user.firstName} ${user.middleName}`.toLowerCase();
+                return fullName.includes(searchTerm) || user.id.toLowerCase().includes(searchTerm);
+            });
+            
+            renderUsersList(filteredUsers);
+        }
+
+        // Показать уведомление
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            renderUsersList();
+            showNotification('Список пользователей загружен', 'success');
+        });
+    </script>
+</body>
+</html>

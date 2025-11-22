@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #faf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(175, 135, 75, 0.1);
+            border: 1px solid #e8dfd0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f5f1e9;
+            border-bottom: 1px solid #e8dfd0;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8c7b63;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #6d604c;
+            border-bottom: 2px solid #b8a17a;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background: #fefcf8;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f5f1e9;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #c8b8a0;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b8a17a;
+        }
+        
+        /* Секции */
+        .section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Статистика посещений */
+        .stats-period-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .period-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d8cebc;
+            border-radius: 8px;
+            background: white;
+            color: #8c7b63;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .period-btn.active {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            border-color: #b8a17a;
+        }
+        
+        .stats-chart {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 15px;
+        }
+        
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .chart-label {
+            width: 80px;
+            font-size: 12px;
+            color: #8c7b63;
+            font-weight: 600;
+        }
+        
+        .chart-bar-container {
+            flex: 1;
+            height: 20px;
+            background: #f0e9dd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .chart-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .chart-value {
+            width: 30px;
+            text-align: right;
+            font-size: 12px;
+            color: #8c7b63;
+            font-weight: 600;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e8dfd0;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #a69984;
+            font-weight: 500;
+        }
+        
+        /* Рекомендации ИИ */
+        .ai-recommendations {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .ai-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e8dfd0;
+        }
+        
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .ai-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .ai-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8c7b63;
+        }
+        
+        .ai-content {
+            font-size: 13px;
+            color: #6d604c;
+            line-height: 1.4;
+        }
+        
+        .ai-suggestion {
+            background: #f8f4ec;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 8px;
+            border-left: 3px solid #b8a17a;
+        }
+        
+        /* Популярные книги */
+        .popular-books {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .popular-book {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e8dfd0;
+        }
+        
+        .popular-rank {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .popular-info {
+            flex: 1;
+        }
+        
+        .popular-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8c7b63;
+            margin-bottom: 4px;
+        }
+        
+        .popular-author {
+            font-size: 12px;
+            color: #a69984;
+            margin-bottom: 6px;
+        }
+        
+        .popular-stats {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .popular-stat {
+            font-size: 11px;
+            color: #8c7b63;
+            font-weight: 500;
+        }
+        
+        .recommendation-badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(156, 138, 107, 0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Экран статистики -->
+    <div class="screen" id="statsScreen">
+        <div class="header">
+            <div class="header-title">Статистика библиотеки</div>
+            <div class="header-icons">
+                <span>📊</span>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('visits')">Посещения</button>
+            <button class="nav-tab" onclick="showTab('ai')">Идеи ИИ</button>
+            <button class="nav-tab" onclick="showTab('books')">Популярные книги</button>
+        </div>
+        
+        <div class="content">
+            <!-- Вкладка посещений -->
+            <div class="tab-content active" id="visitsTab">
+                <div class="section">
+                    <div class="section-title">
+                        <span>👥</span>
+                        Статистика посещений мероприятий
+                    </div>
+                    
+                    <div class="stats-period-selector">
+                        <button class="period-btn active" onclick="changeStatsPeriod('day')">День</button>
+                        <button class="period-btn" onclick="changeStatsPeriod('week')">Неделя</button>
+                        <button class="period-btn" onclick="changeStatsPeriod('month')">Месяц</button>
+                    </div>
+                    
+                    <div class="stats-chart" id="statsChart">
+                        <div class="chart-bar">
+                            <div class="chart-label">Дети</div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="chart-value">75%</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-label">Подростки</div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="chart-value">60%</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-label">Взрослые</div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill" style="width: 45%"></div>
+                            </div>
+                            <div class="chart-value">45%</div>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-label">Пенсионеры</div>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill" style="width: 30%"></div>
+                            </div>
+                            <div class="chart-value">30%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-summary">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalVisits">142</div>
+                            <div class="stat-label">Всего посещений</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avgDuration">32</div>
+                            <div class="stat-label">Среднее время (мин)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="popularEvent">Клуб игр</div>
+                            <div class="stat-label">Самое популярное</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="attendanceRate">78%</div>
+                            <div class="stat-label">Посещаемость</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <span>📈</span>
+                        Динамика посещаемости
+                    </div>
+                    <div style="text-align: center; padding: 20px; color: #a69984;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">📊</div>
+                        <div>График динамики посещений за выбранный период</div>
+                        <div style="font-size: 12px; margin-top: 5px;">(Интеграция с системой аналитики)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка идей ИИ -->
+            <div class="tab-content" id="aiTab">
+                <div class="section">
+                    <div class="section-title">
+                        <span>🤖</span>
+                        Идеи для новых мероприятий
+                    </div>
+                    
+                    <div class="ai-recommendations">
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">🎯</div>
+                                <div class="ai-title">На основе трендов</div>
+                            </div>
+                            <div class="ai-content">
+                                Анализ показывает рост интереса к экологическим темам среди молодежи.
+                            </div>
+                            <div class="ai-suggestion">
+                                <strong>Предложение:</strong> Цикл встреч "Экология в литературе" с приглашенными экспертами
+                            </div>
+                        </div>
+                        
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">🔥</div>
+                                <div class="ai-title">На основе популярных мероприятий</div>
+                            </div>
+                            <div class="ai-content">
+                                Клубы настольных игр показывают стабильно высокую посещаемость.
+                            </div>
+                            <div class="ai-suggestion">
+                                <strong>Предложение:</strong> Турниры по стратегическим играм с тематическими призами
+                            </div>
+                        </div>
+                        
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">📚</div>
+                                <div class="ai-title">На основе популярных книг</div>
+                            </div>
+                            <div class="ai-content">
+                                Высокий спрос на книги по психологии и саморазвитию.
+                            </div>
+                            <div class="ai-suggestion">
+                                <strong>Предложение:</strong> Серия мастер-классов "Психология успеха" с практикующими психологами
+                            </div>
+                        </div>
+                        
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">👥</div>
+                                <div class="ai-title">Для разных возрастных групп</div>
+                            </div>
+                            <div class="ai-content">
+                                Дети и подростки активно участвуют в творческих мастерских.
+                            </div>
+                            <div class="ai-suggestion">
+                                <strong>Предложение:</strong> "Цифровые выходные" - обучение digital-навыкам для разных возрастов
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <span>💡</span>
+                        Рекомендации по улучшению
+                    </div>
+                    <div class="ai-recommendations">
+                        <div class="ai-item">
+                            <div class="ai-content">
+                                <strong>Время проведения:</strong> Перенести вечерние мероприятия на 18:00 - пиковая посещаемость
+                            </div>
+                        </div>
+                        <div class="ai-item">
+                            <div class="ai-content">
+                                <strong>Продвижение:</strong> Использовать социальные сети для привлечения подростковой аудитории
+                            </div>
+                        </div>
+                        <div class="ai-item">
+                            <div class="ai-content">
+                                <strong>Формат:</strong> Добавить онлайн-трансляции для удаленных участников
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Вкладка популярных книг -->
+            <div class="tab-content" id="booksTab">
+                <div class="section">
+                    <div class="section-title">
+                        <span>🔥</span>
+                        Самые популярные книги
+                    </div>
+                    
+                    <div class="popular-books">
+                        <div class="popular-book">
+                            <div class="popular-rank">1</div>
+                            <div class="popular-info">
+                                <div class="popular-title">Тонкое искусство пофигизма</div>
+                                <div class="popular-author">Марк Мэнсон</div>
+                                <div class="popular-stats">
+                                    <div class="popular-stat">📊 42 выдачи</div>
+                                    <div class="popular-stat">⭐ 4.8/5</div>
+                                </div>
+                                <div class="recommendation-badge">Рекомендуем закупить дополнительные экземпляры</div>
+                            </div>
+                        </div>
+                        
+                        <div class="popular-book">
+                            <div class="popular-rank">2</div>
+                            <div class="popular-info">
+                                <div class="popular-title">Атлант расправил плечи</div>
+                                <div class="popular-author">Айн Рэнд</div>
+                                <div class="popular-stats">
+                                    <div class="popular-stat">📊 38 выдач</div>
+                                    <div class="popular-stat">⭐ 4.6/5</div>
+                                </div>
+                                <div class="recommendation-badge">Высокий спрос, мало экземпляров</div>
+                            </div>
+                        </div>
+                        
+                        <div class="popular-book">
+                            <div class="popular-rank">3</div>
+                            <div class="popular-info">
+                                <div class="popular-title">Психология влияния</div>
+                                <div class="popular-author">Роберт Чалдини</div>
+                                <div class="popular-stats">
+                                    <div class="popular-stat">📊 35 выдач</div>
+                                    <div class="popular-stat">⭐ 4.7/5</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="popular-book">
+                            <div class="popular-rank">4</div>
+                            <div class="popular-info">
+                                <div class="popular-title">Хочу и буду</div>
+                                <div class="popular-author">Михаил Лабковский</div>
+                                <div class="popular-stats">
+                                    <div class="popular-stat">📊 32 выдачи</div>
+                                    <div class="popular-stat">⭐ 4.5/5</div>
+                                </div>
+                                <div class="recommendation-badge">Популярность растет</div>
+                            </div>
+                        </div>
+                        
+                        <div class="popular-book">
+                            <div class="popular-rank">5</div>
+                            <div class="popular-info">
+                                <div class="popular-title">7 навыков высокоэффективных людей</div>
+                                <div class="popular-author">Стивен Кови</div>
+                                <div class="popular-stats">
+                                    <div class="popular-stat">📊 30 выдач</div>
+                                    <div class="popular-stat">⭐ 4.4/5</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <span>📈</span>
+                        Рекомендации по пополнению каталога
+                    </div>
+                    <div class="ai-recommendations">
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">📚</div>
+                                <div class="ai-title">Психология и саморазвитие</div>
+                            </div>
+                            <div class="ai-content">
+                                <strong>Приоритет:</strong> Высокий. Наблюдается стабильный рост спроса.
+                                <div style="margin-top: 8px;">
+                                    <strong>Рекомендуемые авторы:</strong> Михаил Лабковский, Ларри Кинг, Дейл Карнеги
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">🔬</div>
+                                <div class="ai-title">Научпоп и технологии</div>
+                            </div>
+                            <div class="ai-content">
+                                <strong>Приоритет:</strong> Средний. Растущий интерес у молодежи.
+                                <div style="margin-top: 8px;">
+                                    <strong>Рекомендуемые темы:</strong> ИИ, экология, космос, digital-навыки
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-item">
+                            <div class="ai-header">
+                                <div class="ai-icon">🎭</div>
+                                <div class="ai-title">Современная проза</div>
+                            </div>
+                            <div class="ai-content">
+                                <strong>Приоритет:</strong> Средний. Стабильный спрос.
+                                <div style="margin-top: 8px;">
+                                    <strong>Рекомендуемые авторы:</strong> Гузель Яхина, Алексей Иванов, Евгений Водолазкин
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Данные статистики
+        const statsData = {
+            day: {
+                children: 75,
+                teens: 60,
+                adults: 45,
+                seniors: 30,
+                totalVisits: 142,
+                avgDuration: 32,
+                popularEvent: "Клуб игр",
+                attendanceRate: "78%"
+            },
+            week: {
+                children: 65,
+                teens: 55,
+                adults: 50,
+                seniors: 40,
+                totalVisits: 210,
+                avgDuration: 45,
+                popularEvent: "Литературный вечер",
+                attendanceRate: "82%"
+            },
+            month: {
+                children: 80,
+                teens: 70,
+                adults: 60,
+                seniors: 50,
+                totalVisits: 260,
+                avgDuration: 38,
+                popularEvent: "Мастер-классы",
+                attendanceRate: "85%"
+            }
+        };
+
+        // Показать вкладку
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс со всех кнопок
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Сделать кнопку активной
+            event.target.classList.add('active');
+        }
+
+        // Изменение периода статистики
+        function changeStatsPeriod(period) {
+            // Обновляем активную кнопку
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Обновляем данные статистики
+            const data = statsData[period];
+            
+            // Обновляем график
+            const bars = document.querySelectorAll('.chart-bar-fill');
+            bars[0].style.width = `${data.children}%`;
+            bars[1].style.width = `${data.teens}%`;
+            bars[2].style.width = `${data.adults}%`;
+            bars[3].style.width = `${data.seniors}%`;
+            
+            // Обновляем значения
+            const values = document.querySelectorAll('.chart-value');
+            values[0].textContent = `${data.children}%`;
+            values[1].textContent = `${data.teens}%`;
+            values[2].textContent = `${data.adults}%`;
+            values[3].textContent = `${data.seniors}%`;
+            
+            // Обновляем суммарные показатели
+            document.getElementById('totalVisits').textContent = data.totalVisits;
+            document.getElementById('avgDuration').textContent = data.avgDuration;
+            document.getElementById('popularEvent').textContent = data.popularEvent;
+            document.getElementById('attendanceRate').textContent = data.attendanceRate;
+        }
+
+        // Показать уведомление
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? 
+                'linear-gradient(135deg, #c87c74, #b5655d)' : 
+                type === 'info' ? 
+                'linear-gradient(135deg, #8c7b63, #6d604c)' : 
+                'linear-gradient(135deg, #b8a17a, #9c8a6b)';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализируем статистику для дня по умолчанию
+            changeStatsPeriod('day');
+            
+            showNotification('Статистика загружена', 'success');
+        });
+    </script>
+</body>
+</html>

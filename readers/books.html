@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История книг - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #81C784;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #4CAF50;
+        }
+        
+        /* Фильтры */
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .filters::-webkit-scrollbar {
+            height: 4px;
+        }
+        
+        .filters::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+        
+        .filters::-webkit-scrollbar-thumb {
+            background: #81C784;
+            border-radius: 2px;
+        }
+        
+        .filter {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 13px;
+            background: white;
+            color: #7D7D7D;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .filter.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        /* Карточки книг */
+        .books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .book-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform 0.2s ease;
+            border-left: 4px solid #81C784;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .book-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .book-cover {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 4px;
+        }
+        
+        .book-author {
+            font-size: 14px;
+            color: #7D7D7D;
+            margin-bottom: 8px;
+        }
+        
+        /* Статусы */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .status-returned {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-extended {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .status-overdue {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status-reading {
+            background: #FF9800;
+            color: white;
+        }
+        
+        /* Даты */
+        .dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .date-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .date-label {
+            font-size: 11px;
+            color: #7D7D7D;
+            font-weight: 500;
+        }
+        
+        .date-value {
+            font-size: 13px;
+            color: #4A4A4A;
+            font-weight: 600;
+        }
+        
+        /* Действия */
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .action-btn:hover {
+            background: #45a049;
+        }
+        
+        .action-btn.review {
+            background: #2196F3;
+        }
+        
+        .action-btn.review:hover {
+            background: #1976D2;
+        }
+        
+        .action-btn.rated {
+            background: #FF9800;
+        }
+        
+        .action-btn.rated:hover {
+            background: #F57C00;
+        }
+        
+        .action-btn:disabled {
+            background: #e0e0e0;
+            color: #9E9E9E;
+            cursor: not-allowed;
+        }
+        
+        /* Разделитель по годам/месяцам */
+        .period-divider {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin: 20px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #81C784;
+        }
+        
+        /* Модальное окно оценки */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .star {
+            font-size: 24px;
+            cursor: pointer;
+            color: #e0e0e0;
+            transition: color 0.2s ease;
+        }
+        
+        .star.active {
+            color: #FFD700;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .modal-btn.primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #e0e0e0;
+            color: #4A4A4A;
+        }
+        
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7D7D7D;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="header">
+            <div class="header-title">История книг</div>
+            <div class="header-icons">
+                <span>🔍</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Фильтры -->
+            <div class="filters">
+                <div class="filter active">Все</div>
+                <div class="filter">Сданы</div>
+                <div class="filter">Продлены</div>
+                <div class="filter">Просрочены</div>
+                <div class="filter">За последний год</div>
+            </div>
+            
+            <div class="books-list">
+                <!-- Декабрь 2024 -->
+                <div class="period-divider">Декабрь 2024</div>
+                
+                <!-- Книга 1 -->
+                <div class="book-card">
+                    <div class="book-header">
+                        <div class="book-cover">П и Н</div>
+                        <div class="book-info">
+                            <div class="book-title">Преступление и наказание</div>
+                            <div class="book-author">Ф.М. Достоевский</div>
+                            <div class="status-badge status-returned">Сдана</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <div class="date-label">Дата выдачи:</div>
+                            <div class="date-value">01.12.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Дата сдачи:</div>
+                            <div class="date-value">15.12.2024</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button class="action-btn" onclick="openRatingModal('Преступление и наказание')">
+                            ⭐ Оценить
+                        </button>
+                        <button class="action-btn review">
+                            💬 Написать отзыв
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Книга 2 -->
+                <div class="book-card">
+                    <div class="book-header">
+                        <div class="book-cover">1984</div>
+                        <div class="book-info">
+                            <div class="book-title">1984</div>
+                            <div class="book-author">Джордж Оруэлл</div>
+                            <div class="status-badge status-extended">Продлена</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <div class="date-label">Дата выдачи:</div>
+                            <div class="date-value">10.11.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Продлена до:</div>
+                            <div class="date-value">25.12.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Изначальный срок:</div>
+                            <div class="date-value">10.12.2024</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button class="action-btn rated" disabled>
+                            ✅ Оценена: 5⭐
+                        </button>
+                        <button class="action-btn review">
+                            💬 Написать отзыв
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ноябрь 2024 -->
+                <div class="period-divider">Ноябрь 2024</div>
+                
+                <!-- Книга 3 -->
+                <div class="book-card">
+                    <div class="book-header">
+                        <div class="book-cover">М и М</div>
+                        <div class="book-info">
+                            <div class="book-title">Мастер и Маргарита</div>
+                            <div class="book-author">Михаил Булгаков</div>
+                            <div class="status-badge status-overdue">Просрочена</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <div class="date-label">Дата выдачи:</div>
+                            <div class="date-value">15.10.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Срок сдачи:</div>
+                            <div class="date-value">15.11.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Сдана:</div>
+                            <div class="date-value">20.11.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Штраф:</div>
+                            <div class="date-value">50 руб. (оплачен)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button class="action-btn" onclick="openRatingModal('Мастер и Маргарита')">
+                            ⭐ Оценить
+                        </button>
+                        <button class="action-btn review">
+                            💬 Написать отзыв
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Книга 4 -->
+                <div class="book-card">
+                    <div class="book-header">
+                        <div class="book-cover">АС</div>
+                        <div class="book-info">
+                            <div class="book-title">Анна Каренина</div>
+                            <div class="book-author">Лев Толстой</div>
+                            <div class="status-badge status-returned">Сдана</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <div class="date-label">Дата выдачи:</div>
+                            <div class="date-value">01.11.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Дата сдачи:</div>
+                            <div class="date-value">14.11.2024</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button class="action-btn rated" disabled>
+                            ✅ Оценена: 4⭐
+                        </button>
+                        <button class="action-btn review">
+                            💬 Редактировать отзыв
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Октябрь 2024 -->
+                <div class="period-divider">Октябрь 2024</div>
+                
+                <!-- Книга 5 -->
+                <div class="book-card">
+                    <div class="book-header">
+                        <div class="book-cover">В и М</div>
+                        <div class="book-info">
+                            <div class="book-title">Война и мир</div>
+                            <div class="book-author">Лев Толстой</div>
+                            <div class="status-badge status-returned">Сдана</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <div class="date-label">Дата выдачи:</div>
+                            <div class="date-value">15.09.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Дата сдачи:</div>
+                            <div class="date-value">30.10.2024</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Продления:</div>
+                            <div class="date-value">2 раза</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button class="action-btn rated" disabled>
+                            ✅ Оценена: 5⭐
+                        </button>
+                        <button class="action-btn review">
+                            💬 Редактировать отзыв
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно оценки -->
+    <div id="ratingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalBookTitle">Оценить книгу</div>
+            <div id="modalBookAuthor"></div>
+            
+            <div class="rating-stars" id="ratingStars">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+            
+            <div id="ratingValue">Выберите оценку</div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeRatingModal()">Отмена</button>
+                <button class="modal-btn primary" id="submitRating" onclick="submitRating()">Оценить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRating = 0;
+        let currentBookTitle = '';
+        
+        // Обработчики для фильтров
+        document.querySelectorAll('.filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Функции для модального окна оценки
+        function openRatingModal(bookTitle) {
+            currentBookTitle = bookTitle;
+            document.getElementById('modalBookTitle').textContent = `Оценить "${bookTitle}"`;
+            document.getElementById('ratingModal').style.display = 'flex';
+            currentRating = 0;
+            updateStars();
+        }
+        
+        function closeRatingModal() {
+            document.getElementById('ratingModal').style.display = 'none';
+        }
+        
+        function updateStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            const ratingText = document.getElementById('ratingValue');
+            if (currentRating === 0) {
+                ratingText.textContent = 'Выберите оценку';
+                ratingText.style.color = '#7D7D7D';
+            } else {
+                ratingText.textContent = `Ваша оценка: ${currentRating} из 5`;
+                ratingText.style.color = '#4CAF50';
+            }
+        }
+        
+        function submitRating() {
+            if (currentRating === 0) {
+                alert('Пожалуйста, выберите оценку');
+                return;
+            }
+            
+            alert(`Спасибо! Вы поставили оценку ${currentRating}⭐ книге "${currentBookTitle}"`);
+            closeRatingModal();
+            
+            // Здесь можно добавить логику сохранения оценки
+        }
+        
+        // Инициализация звезд рейтинга
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.getAttribute('data-rating'));
+                updateStars();
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const hoverRating = parseInt(this.getAttribute('data-rating'));
+                const stars = document.querySelectorAll('.star');
+                stars.forEach((s, index) => {
+                    if (index < hoverRating) {
+                        s.style.color = '#FFD700';
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                updateStars();
+            });
+        });
+        
+        // Обработчики для кнопок отзывов
+        document.querySelectorAll('.action-btn.review').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bookTitle = this.closest('.book-card').querySelector('.book-title').textContent;
+                alert(`Открывается форма для написания отзыва на книгу "${bookTitle}"`);
+            });
+        });
+        
+        // Анимация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookCards = document.querySelectorAll('.book-card');
+            bookCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>

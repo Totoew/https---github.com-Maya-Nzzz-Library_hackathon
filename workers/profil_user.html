@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль читателя - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #faf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(175, 135, 75, 0.1);
+            border: 1px solid #e8dfd0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background: #fefcf8;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f5f1e9;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #c8b8a0;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b8a17a;
+        }
+        
+        /* Профиль пользователя */
+        .profile-section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+        
+        .profile-id {
+            font-size: 14px;
+            color: #a69984;
+            font-weight: 500;
+        }
+        
+        /* Кнопка редактирования - перемещена ниже */
+        .edit-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        
+        .edit-btn {
+            background: #d8cebc;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #6d604c;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        
+        .edit-btn:hover {
+            background: #c8b8a0;
+            transform: translateY(-1px);
+        }
+        
+        /* Детали профиля */
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #a69984;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            color: #6d604c;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+        
+        /* Книги на руках */
+        .books-section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .book-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e8dfd0;
+        }
+        
+        .book-cover {
+            width: 45px;
+            height: 60px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            text-align: center;
+            padding: 4px;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8c7b63;
+            margin-bottom: 4px;
+        }
+        
+        .book-author {
+            font-size: 12px;
+            color: #a69984;
+            margin-bottom: 6px;
+        }
+        
+        .book-due {
+            font-size: 11px;
+            color: #b5655d;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        /* Кнопки для книг */
+        .book-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .book-action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        
+        .book-action-btn.extend {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        .book-action-btn.extend:hover {
+            background: linear-gradient(135deg, #9c8a6b, #8c7b63);
+        }
+        
+        .book-action-btn.return {
+            background: linear-gradient(135deg, #81c784, #66bb6a);
+            color: white;
+        }
+        
+        .book-action-btn.return:hover {
+            background: linear-gradient(135deg, #66bb6a, #4caf50);
+        }
+        
+        .book-action-btn:disabled {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        /* Мероприятия */
+        .events-section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+        }
+        
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e8dfd0;
+        }
+        
+        .event-info {
+            flex: 1;
+        }
+        
+        .event-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8c7b63;
+            margin-bottom: 2px;
+        }
+        
+        .event-date {
+            font-size: 12px;
+            color: #a69984;
+        }
+        
+        .event-status {
+            background: #b8a17a;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        /* Кнопка выдачи */
+        .issue-section {
+            margin-top: 20px;
+        }
+        
+        .issue-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            border: none;
+            padding: 18px 20px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(156, 138, 107, 0.2);
+        }
+        
+        .issue-btn:hover {
+            background: linear-gradient(135deg, #9c8a6b, #8c7b63);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 138, 107, 0.3);
+        }
+        
+        /* Модальное окно выдачи */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 350px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        /* Сканирование книги */
+        .scan-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .scanner-container {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border: 2px dashed #d8cebc;
+            border-radius: 16px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .scanner-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: #b8a17a;
+        }
+        
+        .scanner-text {
+            color: #8c7b63;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .scanner-hint {
+            color: #a69984;
+            font-size: 13px;
+        }
+        
+        /* Поиск книги */
+        .search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #d8cebc;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+            color: #5d5240;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #b8a17a;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        /* Информация о книге */
+        .book-card {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e8dfd0;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .book-card-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .book-card-cover {
+            width: 70px;
+            height: 90px;
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 6px;
+        }
+        
+        .book-card-info {
+            flex: 1;
+        }
+        
+        .book-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 6px;
+        }
+        
+        .book-card-author {
+            font-size: 14px;
+            color: #a69984;
+            margin-bottom: 8px;
+        }
+        
+        .book-card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .book-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .book-action-btn-modal {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .book-action-btn-modal.primary {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        .book-action-btn-modal.secondary {
+            background: linear-gradient(135deg, #d8cebc, #c8b8a0);
+            color: #5d5240;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(156, 138, 107, 0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Основной экран профиля -->
+    <div class="screen" id="profileScreen">
+        <div class="header">
+            <div class="header-title" id="headerTitle">Иванов Иван Иванович</div>
+            <div class="header-icons">
+                <span>👤</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Профиль пользователя -->
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="userAvatar">ИИИ</div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="userName">Иванов Иван Иванович</div>
+                        <div class="profile-id" id="userId">ID: LB12345678</div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка редактирования перемещена сюда -->
+                <div class="edit-btn-container">
+                    <button class="edit-btn" onclick="editProfile()">
+                        <span>✏️</span> Редактировать профиль
+                    </button>
+                </div>
+                
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Телефон</div>
+                        <div class="detail-value" id="userPhone">+7 (912) 345-67-89</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value" id="userEmail">ivanov@email.com</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Адрес</div>
+                        <div class="detail-value" id="userAddress">ул. Ленина, 25, кв. 14</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Статус</div>
+                        <div class="detail-value" id="userStatus">Активен</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Книги на руках -->
+            <div class="books-section">
+                <div class="section-title">
+                    <span>📚</span>
+                    Книги на руках
+                </div>
+                
+                <div class="books-list" id="booksList">
+                    <div class="book-item">
+                        <div class="book-cover">П и Н</div>
+                        <div class="book-info">
+                            <div class="book-title">Преступление и наказание</div>
+                            <div class="book-author">Ф.М. Достоевский</div>
+                            <div class="book-due">Вернуть до: 25.12.2024</div>
+                            <div class="book-actions">
+                                <button class="book-action-btn extend" onclick="extendBook(this, 'Преступление и наказание')">
+                                    ⏳ Продлить
+                                </button>
+                                <button class="book-action-btn return" onclick="returnBook(this, 'Преступление и наказание')">
+                                    ✅ Принять
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover">М и М</div>
+                        <div class="book-info">
+                            <div class="book-title">Мастер и Маргарита</div>
+                            <div class="book-author">Михаил Булгаков</div>
+                            <div class="book-due">Вернуть до: 20.12.2024</div>
+                            <div class="book-actions">
+                                <button class="book-action-btn extend" onclick="extendBook(this, 'Мастер и Маргарита')">
+                                    ⏳ Продлить
+                                </button>
+                                <button class="book-action-btn return" onclick="returnBook(this, 'Мастер и Маргарита')">
+                                    ✅ Принять
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="book-item">
+                        <div class="book-cover">1984</div>
+                        <div class="book-info">
+                            <div class="book-title">1984</div>
+                            <div class="book-author">Джордж Оруэлл</div>
+                            <div class="book-due" style="color: #e53935;">Просрочена! Вернуть до: 15.12.2024</div>
+                            <div class="book-actions">
+                                <button class="book-action-btn extend" onclick="extendBook(this, '1984')">
+                                    ⏳ Продлить
+                                </button>
+                                <button class="book-action-btn return" onclick="returnBook(this, '1984')">
+                                    ✅ Принять
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Мероприятия -->
+            <div class="events-section">
+                <div class="section-title">
+                    <span>📅</span>
+                    Записан на мероприятия
+                </div>
+                
+                <div class="events-list" id="eventsList">
+                    <div class="event-item">
+                        <div class="event-info">
+                            <div class="event-name">Литературный вечер</div>
+                            <div class="event-date">25.12.2024, 15:00</div>
+                        </div>
+                        <div class="event-status">Записан</div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="event-info">
+                            <div class="event-name">Мастер-класс по скорочтению</div>
+                            <div class="event-date">28.12.2024, 18:00</div>
+                        </div>
+                        <div class="event-status">Записан</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Кнопка выдачи -->
+            <div class="issue-section">
+                <button class="issue-btn" onclick="openIssueModal()">
+                    📖 Выдать книгу
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выдачи книги -->
+    <div class="modal" id="issueModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Выдача книги</div>
+                <button class="close-btn" onclick="closeIssueModal()">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Сканирование книги -->
+                <div class="scan-section">
+                    <div class="scanner-container" id="bookScanner">
+                        <div class="scanner-icon">📷</div>
+                        <div class="scanner-text">Сканируйте штрих-код книги</div>
+                        <div class="scanner-hint">Автоматическое распознавание</div>
+                        <button class="search-btn" onclick="startBookScan()" style="margin-top: 15px;">
+                            🔍 Сканировать
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Поиск книги -->
+                <div class="search-section">
+                    <div class="search-input-group">
+                        <input type="text" class="search-input" id="bookSearchInput" 
+                               placeholder="Введите ISBN или номер книги...">
+                        <button class="search-btn" onclick="searchBook()">
+                            Найти
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Информация о книге -->
+                <div class="book-card" id="bookCard">
+                    <div class="book-card-header">
+                        <div class="book-card-cover" id="bookCover">1984</div>
+                        <div class="book-card-info">
+                            <div class="book-card-title" id="bookTitle">1984</div>
+                            <div class="book-card-author" id="bookAuthor">Джордж Оруэлл</div>
+                            <div class="detail-item">
+                                <div class="detail-label">ISBN</div>
+                                <div class="detail-value" id="bookIsbn">978-5-699-12014-7</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Год</div>
+                                <div class="detail-value" id="bookYear">1949</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-card-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Жанр</div>
+                            <div class="detail-value" id="bookGenre">Антиутопия</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Стеллаж</div>
+                            <div class="detail-value" id="bookShelf">A-15</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Статус</div>
+                            <div class="detail-value" id="bookStatus">Доступна</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Срок</div>
+                            <div class="detail-value" id="bookTerm">14 дней</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-card-actions">
+                        <button class="book-action-btn-modal secondary" onclick="addAnotherBook()">
+                            ＋ Добавить ещё
+                        </button>
+                        <button class="book-action-btn-modal primary" onclick="issueBookToUser()">
+                            ✅ Выдать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Данные пользователя
+        const userData = {
+            lastName: 'Иванов',
+            firstName: 'Иван',
+            middleName: 'Иванович',
+            avatar: 'ИИИ',
+            id: 'LB12345678',
+            phone: '+7 (912) 345-67-89',
+            email: 'ivanov@email.com',
+            address: 'ул. Ленина, 25, кв. 14',
+            status: 'Активен'
+        };
+        
+        // Данные книг
+        const booksData = {
+            '9785699120147': {
+                title: '1984',
+                author: 'Джордж Оруэлл',
+                genre: 'Антиутопия',
+                year: '1949',
+                shelf: 'A-15',
+                status: 'Доступна',
+                term: '14 дней'
+            },
+            '9785170801152': {
+                title: 'Мастер и Маргарита',
+                author: 'Михаил Булгаков',
+                genre: 'Роман',
+                year: '1966',
+                shelf: 'B-08',
+                status: 'Доступна',
+                term: '14 дней'
+            },
+            '9785170877485': {
+                title: 'Преступление и наказание',
+                author: 'Ф.М. Достоевский',
+                genre: 'Роман',
+                year: '1866',
+                shelf: 'C-12',
+                status: 'Доступна',
+                term: '14 дней'
+            }
+        };
+        
+        // Инициализация профиля
+        function initProfile() {
+            const fullName = `${userData.lastName} ${userData.firstName} ${userData.middleName}`;
+            
+            document.getElementById('headerTitle').textContent = fullName;
+            document.getElementById('userAvatar').textContent = userData.avatar;
+            document.getElementById('userName').textContent = fullName;
+            document.getElementById('userId').textContent = `ID: ${userData.id}`;
+            document.getElementById('userPhone').textContent = userData.phone;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userAddress').textContent = userData.address;
+            document.getElementById('userStatus').textContent = userData.status;
+        }
+        
+        // Редактирование профиля
+        function editProfile() {
+            showNotification('Редактирование профиля', 'info');
+            // Здесь можно открыть форму редактирования
+        }
+        
+        // Продление книги
+        function extendBook(button, bookTitle) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Продление...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = '✅ Продлена';
+                button.style.background = '#81c784';
+                button.disabled = true;
+                
+                // Находим элемент с датой возврата и обновляем его
+                const bookItem = button.closest('.book-item');
+                const dueElement = bookItem.querySelector('.book-due');
+                const newDate = new Date();
+                newDate.setDate(newDate.getDate() + 14); // +14 дней
+                dueElement.textContent = `Вернуть до: ${newDate.toLocaleDateString('ru-RU')}`;
+                dueElement.style.color = '#8c7b63'; // Возвращаем нормальный цвет
+                
+                showNotification(`Книга "${bookTitle}" продлена на 14 дней`, 'success');
+            }, 1500);
+        }
+        
+        // Прием книги (возврат)
+        function returnBook(button, bookTitle) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Прием...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                // Удаляем книгу из списка
+                const bookItem = button.closest('.book-item');
+                bookItem.style.opacity = '0';
+                bookItem.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    bookItem.remove();
+                    showNotification(`Книга "${bookTitle}" принята`, 'success');
+                    
+                    // Если книг не осталось, показываем сообщение
+                    const booksList = document.getElementById('booksList');
+                    if (booksList.children.length === 0) {
+                        booksList.innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: #a69984;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">📚</div>
+                                <div>Нет книг на руках</div>
+                            </div>
+                        `;
+                    }
+                }, 500);
+            }, 1500);
+        }
+        
+        // Открытие модального окна выдачи
+        function openIssueModal() {
+            document.getElementById('issueModal').style.display = 'flex';
+            document.getElementById('bookCard').style.display = 'none';
+            document.getElementById('bookSearchInput').value = '';
+        }
+        
+        // Закрытие модального окна
+        function closeIssueModal() {
+            document.getElementById('issueModal').style.display = 'none';
+        }
+        
+        // Сканирование книги
+        function startBookScan() {
+            const scanner = document.getElementById('bookScanner');
+            scanner.style.borderColor = '#b8a17a';
+            scanner.style.background = 'linear-gradient(135deg, #f9f3e9, #f5ede0)';
+            
+            showNotification('Сканирование книги...', 'info');
+            
+            // Имитация сканирования
+            setTimeout(() => {
+                // Случайная книга для демонстрации
+                const randomIsbn = Object.keys(booksData)[Math.floor(Math.random() * Object.keys(booksData).length)];
+                document.getElementById('bookSearchInput').value = randomIsbn;
+                searchBook();
+                
+                showNotification('Книга распознана!', 'success');
+            }, 1500);
+        }
+        
+        // Поиск книги
+        function searchBook() {
+            const searchInput = document.getElementById('bookSearchInput');
+            const isbn = searchInput.value.trim();
+            
+            if (!isbn) {
+                showNotification('Введите ISBN или номер книги', 'error');
+                return;
+            }
+            
+            if (booksData[isbn]) {
+                displayBookInfo(isbn, booksData[isbn]);
+                document.getElementById('bookCard').style.display = 'block';
+                showNotification('Книга найдена!', 'success');
+            } else {
+                showNotification('Книга не найдена', 'error');
+                document.getElementById('bookCard').style.display = 'none';
+            }
+        }
+        
+        // Отображение информации о книге
+        function displayBookInfo(isbn, bookData) {
+            document.getElementById('bookCover').textContent = bookData.title.split(' ').map(word => word[0]).join('');
+            document.getElementById('bookTitle').textContent = bookData.title;
+            document.getElementById('bookAuthor').textContent = bookData.author;
+            document.getElementById('bookIsbn').textContent = isbn;
+            document.getElementById('bookYear').textContent = bookData.year;
+            document.getElementById('bookGenre').textContent = bookData.genre;
+            document.getElementById('bookShelf').textContent = bookData.shelf;
+            document.getElementById('bookStatus').textContent = bookData.status;
+            document.getElementById('bookTerm').textContent = bookData.term;
+        }
+        
+        // Добавить еще книгу
+        function addAnotherBook() {
+            document.getElementById('bookCard').style.display = 'none';
+            document.getElementById('bookSearchInput').value = '';
+            document.getElementById('bookSearchInput').focus();
+            showNotification('Добавьте следующую книгу', 'info');
+        }
+        
+        // Выдать книгу пользователю
+        function issueBookToUser() {
+            const bookTitle = document.getElementById('bookTitle').textContent;
+            const userName = document.getElementById('userName').textContent;
+            
+            showNotification(`Книга "${bookTitle}" выдана пользователю ${userName}`, 'success');
+            
+            setTimeout(() => {
+                closeIssueModal();
+                // Здесь можно обновить список книг пользователя
+            }, 1500);
+        }
+        
+        // Показать уведомление
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? 
+                'linear-gradient(135deg, #c87c74, #b5655d)' : 
+                type === 'info' ? 
+                'linear-gradient(135deg, #8c7b63, #6d604c)' : 
+                'linear-gradient(135deg, #b8a17a, #9c8a6b)';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Обработка Enter в поле поиска книги
+        document.getElementById('bookSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBook();
+            }
+        });
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initProfile();
+            
+            // Добавляем обработчик для закрытия модального окна по клику вне его
+            document.getElementById('issueModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeIssueModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Библиотека №14</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #faf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(175, 135, 75, 0.1);
+            border: 1px solid #e8dfd0;
+            width: 100%;
+            max-width: 375px;
+            height: 667px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            background: #fefcf8;
+        }
+        
+        /* Стили для скроллбара */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .content::-webkit-scrollbar-track {
+            background: #f5f1e9;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb {
+            background: #c8b8a0;
+            border-radius: 3px;
+        }
+        
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b8a17a;
+        }
+        
+        /* Форма регистрации */
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-section {
+            background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #e8dfd0;
+            box-shadow: 0 4px 15px rgba(200, 184, 160, 0.08);
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6d604c;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #d8cebc;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            color: #5d5240;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #b8a17a;
+            box-shadow: 0 0 0 3px rgba(184, 161, 122, 0.15);
+            background: #fefcf8;
+        }
+        
+        .form-input::placeholder {
+            color: #a69984;
+        }
+        
+        .form-input.error {
+            border-color: #c87c74;
+            box-shadow: 0 0 0 3px rgba(200, 124, 116, 0.1);
+        }
+        
+        .error-message {
+            color: #b5655d;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        /* SMS код */
+        .sms-section {
+            display: none;
+        }
+        
+        .sms-timer {
+            text-align: center;
+            color: #8c7b63;
+            font-size: 14px;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+        
+        .sms-code-input {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        
+        .code-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            border: 2px solid #d8cebc;
+            border-radius: 12px;
+            background: white;
+            color: #5d5240;
+            transition: all 0.3s ease;
+        }
+        
+        .code-input:focus {
+            border-color: #b8a17a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(184, 161, 122, 0.15);
+            background: #fefcf8;
+        }
+        
+        .resend-sms {
+            text-align: center;
+            margin-top: 18px;
+        }
+        
+        .resend-link {
+            color: #9c8a6b;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .resend-link:hover {
+            color: #8c7b63;
+        }
+        
+        .resend-link:disabled {
+            color: #c8b8a0;
+            cursor: not-allowed;
+        }
+        
+        /* Кнопки */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(156, 138, 107, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #9c8a6b, #8c7b63);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 138, 107, 0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #d8cebc, #c8b8a0);
+            color: #5d5240;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #c8b8a0, #b8a17a);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 184, 160, 0.2);
+        }
+        
+        .btn:disabled {
+            background: #e8e2d6;
+            color: #a69984;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Информация о пользователе */
+        .user-info {
+            background: linear-gradient(135deg, #f9f3e9, #f5ede0);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 2px solid #e8dfd0;
+            display: none;
+            box-shadow: 0 6px 20px rgba(200, 184, 160, 0.1);
+        }
+        
+        .user-info-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #8c7b63;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .user-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e8dfd0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #6d604c;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            color: #8c7b63;
+        }
+        
+        /* Загрузка */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f5f1e9;
+            border-top: 4px solid #b8a17a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        .loading-text {
+            color: #8c7b63;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(156, 138, 107, 0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Декоративные элементы */
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #b8a17a, #d8cebc);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        /* Иконки */
+        .icon {
+            font-size: 20px;
+        }
+        
+        /* Текстовые акценты */
+        .required::after {
+            content: " *";
+            color: #b5655d;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="header">
+            <div class="header-title">Регистрация читателя</div>
+            <div class="header-icons">
+                <span>👨‍💼</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="registration-form">
+                <!-- Основная информация -->
+                <div class="form-section" id="personalInfoSection">
+                    <div class="section-title">
+                        <span class="icon">👤</span>
+                        Основная информация
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Фамилия</label>
+                        <input type="text" class="form-input" id="lastName" placeholder="Введите фамилию">
+                        <div class="error-message" id="lastNameError">Пожалуйста, введите фамилию</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Имя</label>
+                        <input type="text" class="form-input" id="firstName" placeholder="Введите имя">
+                        <div class="error-message" id="firstNameError">Пожалуйста, введите имя</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Отчество</label>
+                        <input type="text" class="form-input" id="middleName" placeholder="Введите отчество">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Дата рождения</label>
+                        <input type="date" class="form-input" id="birthDate">
+                    </div>
+                </div>
+                
+                <!-- Контактная информация -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="icon">📞</span>
+                        Контактная информация
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Номер телефона</label>
+                        <input type="tel" class="form-input" id="phone" placeholder="+7 (___) ___-__-__">
+                        <div class="error-message" id="phoneError">Введите корректный номер телефона</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="email" placeholder="email@example.com">
+                        <div class="error-message" id="emailError">Введите корректный email</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Адрес проживания</label>
+                        <input type="text" class="form-input" id="address" placeholder="Город, улица, дом, квартира">
+                    </div>
+                </div>
+                
+                <!-- Подтверждение телефона -->
+                <div class="form-section sms-section" id="smsSection">
+                    <div class="section-title">
+                        <span class="icon">📱</span>
+                        Подтверждение телефона
+                    </div>
+                    
+                    <div class="sms-timer" id="smsTimer">
+                        Код действителен: <span id="timer">03:00</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Код из SMS</label>
+                        <div class="sms-code-input">
+                            <input type="text" class="code-input" maxlength="1" id="code1">
+                            <input type="text" class="code-input" maxlength="1" id="code2">
+                            <input type="text" class="code-input" maxlength="1" id="code3">
+                            <input type="text" class="code-input" maxlength="1" id="code4">
+                        </div>
+                        <div class="error-message" id="smsError">Неверный код подтверждения</div>
+                    </div>
+                    
+                    <div class="resend-sms">
+                        <a href="#" class="resend-link" id="resendSms" onclick="resendSms()">Отправить код повторно</a>
+                    </div>
+                </div>
+                
+                <!-- Действия -->
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="backBtn" onclick="goBack()" style="display: none;">
+                        <span>←</span> Назад
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="sendSms()">
+                        Отправить код <span>→</span>
+                    </button>
+                    <button class="btn btn-primary" id="registerBtn" onclick="registerUser()" style="display: none;">
+                        <span>📝</span> Зарегистрировать
+                    </button>
+                </div>
+                
+                <!-- Информация о зарегистрированном пользователе -->
+                <div class="user-info" id="userInfo">
+                    <div class="user-info-title">✅ Читатель зарегистрирован</div>
+                    <div class="user-details">
+                        <div class="user-detail">
+                            <span class="detail-label">ФИО:</span>
+                            <span class="detail-value" id="infoFullName"></span>
+                        </div>
+                        <div class="user-detail">
+                            <span class="detail-label">Телефон:</span>
+                            <span class="detail-value" id="infoPhone"></span>
+                        </div>
+                        <div class="user-detail">
+                            <span class="detail-label">Читательский билет:</span>
+                            <span class="detail-value" id="infoCardNumber"></span>
+                        </div>
+                        <div class="user-detail">
+                            <span class="detail-label">Дата регистрации:</span>
+                            <span class="detail-value" id="infoRegDate"></span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="printCard()" style="margin-top: 20px;">
+                        <span>🖨️</span> Распечатать карту
+                    </button>
+                </div>
+                
+                <!-- Загрузка -->
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Отправка SMS...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let smsTimer;
+        let timeLeft = 180;
+        let smsCode = '';
+        
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+            e.target.value = '+7' + (x[2] ? ' (' + x[2] : '') + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+        });
+        
+        // Автопереход между полями SMS кода
+        const codeInputs = document.querySelectorAll('.code-input');
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', function(e) {
+                if (this.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+                validateSmsCode();
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        function validatePersonalInfo() {
+            let isValid = true;
+            
+            const lastName = document.getElementById('lastName').value.trim();
+            if (!lastName) {
+                document.getElementById('lastNameError').style.display = 'block';
+                document.getElementById('lastName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('lastNameError').style.display = 'none';
+                document.getElementById('lastName').classList.remove('error');
+            }
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            if (!firstName) {
+                document.getElementById('firstNameError').style.display = 'block';
+                document.getElementById('firstName').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('firstNameError').style.display = 'none';
+                document.getElementById('firstName').classList.remove('error');
+            }
+            
+            const phone = document.getElementById('phone').value.replace(/\D/g, '');
+            if (phone.length !== 11) {
+                document.getElementById('phoneError').style.display = 'block';
+                document.getElementById('phone').classList.add('error');
+                isValid = false;
+            } else {
+                document.getElementById('phoneError').style.display = 'none';
+                document.getElementById('phone').classList.remove('error');
+            }
+            
+            return isValid;
+        }
+        
+        function sendSms() {
+            if (!validatePersonalInfo()) {
+                showNotification('Заполните обязательные поля', 'error');
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('nextBtn').disabled = true;
+            
+            smsCode = Math.floor(1000 + Math.random() * 9000).toString();
+            
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('personalInfoSection').style.display = 'none';
+                document.getElementById('smsSection').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('backBtn').style.display = 'block';
+                document.getElementById('registerBtn').style.display = 'block';
+                
+                startTimer();
+                showNotification(`Код ${smsCode} отправлен на ваш телефон`, 'success');
+                document.getElementById('code1').focus();
+            }, 2000);
+        }
+        
+        function startTimer() {
+            timeLeft = 180;
+            updateTimer();
+            smsTimer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(smsTimer);
+                    document.getElementById('resendSms').disabled = false;
+                }
+            }, 1000);
+        }
+        
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function resendSms() {
+            if (timeLeft > 0) return;
+            
+            document.getElementById('resendSms').disabled = true;
+            document.getElementById('smsError').style.display = 'none';
+            
+            smsCode = Math.floor(1000 + Math.random() * 9000).toString();
+            
+            startTimer();
+            showNotification(`Новый код ${smsCode} отправлен`, 'success');
+            
+            codeInputs.forEach(input => input.value = '');
+            document.getElementById('code1').focus();
+        }
+        
+        function validateSmsCode() {
+            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+            if (enteredCode.length === 4) {
+                if (enteredCode === smsCode) {
+                    document.getElementById('smsError').style.display = 'none';
+                    return true;
+                } else {
+                    document.getElementById('smsError').style.display = 'block';
+                    return false;
+                }
+            }
+            return false;
+        }
+        
+        function registerUser() {
+            if (!validateSmsCode()) {
+                showNotification('Неверный код подтверждения', 'error');
+                return;
+            }
+            
+            const userData = {
+                lastName: document.getElementById('lastName').value.trim(),
+                firstName: document.getElementById('firstName').value.trim(),
+                middleName: document.getElementById('middleName').value.trim(),
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                birthDate: document.getElementById('birthDate').value
+            };
+            
+            const cardNumber = 'LB' + Date.now().toString().slice(-8);
+            
+            document.getElementById('infoFullName').textContent = 
+                `${userData.lastName} ${userData.firstName} ${userData.middleName}`.trim();
+            document.getElementById('infoPhone').textContent = userData.phone;
+            document.getElementById('infoCardNumber').textContent = cardNumber;
+            document.getElementById('infoRegDate').textContent = new Date().toLocaleDateString('ru-RU');
+            
+            document.getElementById('smsSection').style.display = 'none';
+            document.getElementById('registerBtn').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            
+            showNotification('Читатель успешно зарегистрирован!', 'success');
+            clearInterval(smsTimer);
+        }
+        
+        function goBack() {
+            document.getElementById('personalInfoSection').style.display = 'block';
+            document.getElementById('smsSection').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('registerBtn').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'none';
+            
+            clearInterval(smsTimer);
+            document.getElementById('resendSms').disabled = false;
+        }
+        
+        function printCard() {
+            showNotification('Функция печати читательского билета', 'info');
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? 
+                'linear-gradient(135deg, #c87c74, #b5655d)' : 
+                type === 'info' ? 
+                'linear-gradient(135deg, #8c7b63, #6d604c)' : 
+                'linear-gradient(135deg, #b8a17a, #9c8a6b)';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        codeInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+                if (enteredCode.length === 4) {
+                    validateSmsCode();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
