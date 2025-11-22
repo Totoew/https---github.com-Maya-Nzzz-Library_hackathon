@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта библиотеки "Голос города"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa36c, #ffde7d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .map-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .map-container {
+            width: 1000px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            display: grid;
+            grid-template-columns: 4fr 4fr 8fr 8fr 8fr 8fr 16fr 8fr 8fr 8fr;
+            grid-template-rows: 10fr 10fr 10fr 10fr;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa36c, #ffde7d);
+        }
+        
+        .zone {
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .zone:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+        
+        .zone-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .zone-name {
+            font-size: 0.7rem;
+            line-height: 1.1;
+        }
+        
+        /* Расположение зон по сетке */
+        .zone-1 {
+            grid-column: 1 / 3;
+            grid-row: 1 / 2;
+            background: linear-gradient(135deg, #4ecdc4, #6ae2d9);
+        }
+        
+        .zone-2 {
+            grid-column: 1 / 3;
+            grid-row: 2 / 3;
+            background: linear-gradient(135deg, #ffa36c, #ffb98c);
+        }
+        
+        .zone-3 {
+            grid-column: 3 / 4;
+            grid-row: 1 / 3;
+            background: linear-gradient(135deg, #a58ae8, #baa5f0);
+        }
+        
+        .zone-4 {
+            grid-column: 2 / 4;
+            grid-row: 3 / 4;
+            background: linear-gradient(135deg, #45b7d1, #6bcae4);
+        }
+        
+        .zone-5 {
+            grid-column: 4 / 6;
+            grid-row: 1 / 3;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        }
+        
+        .zone-6 {
+            grid-column: 5 / 6;
+            grid-row: 4 / 5;
+            background: linear-gradient(135deg, #96ceb4, #b1dec9);
+        }
+        
+        .zone-7 {
+            grid-column: 4 / 5;
+            grid-row: 3 / 4;
+            background: linear-gradient(135deg, #f78fb3, #f9a8c7);
+        }
+        
+        .zone-8 {
+            grid-column: 5 / 6;
+            grid-row: 3 / 4;
+            background: linear-gradient(135deg, #cf6a87, #d8859e);
+        }
+        
+        .zone-9 {
+            grid-column: 6 / 8;
+            grid-row: 1 / 3;
+            background: linear-gradient(135deg, #ffde7d, #ffe9a8);
+            color: #333;
+        }
+        
+        .zone-10-part1 {
+            grid-column: 7 / 8;
+            grid-row: 3 / 5;
+            background: linear-gradient(135deg, #546de5, #6f82ec);
+        }
+        
+        .zone-10-part2 {
+            grid-column: 8 / 9;
+            grid-row: 3 / 4;
+            background: linear-gradient(135deg, #546de5, #6f82ec);
+        }
+        
+        .zone-11 {
+            grid-column: 8 / 9;
+            grid-row: 4 / 5;
+            background: linear-gradient(135deg, #786fa6, #8f86c1);
+        }
+        
+        .zone-12 {
+            grid-column: 9 / 11;
+            grid-row: 3 / 5;
+            background: linear-gradient(135deg, #e15f41, #e87a61);
+        }
+        
+        .zone-13 {
+            grid-column: 9 / 11;
+            grid-row: 2 / 3;
+            background: linear-gradient(135deg, #546de5, #6f82ec);
+        }
+        
+        .zone-13-1 {
+            grid-column: 10 / 11;
+            grid-row: 1 / 2;
+            background: linear-gradient(135deg, #e15f41, #e87a61);
+        }
+        
+        .zone-13-2 {
+            grid-column: 9 / 10;
+            grid-row: 1 / 2;
+            background: linear-gradient(135deg, #786fa6, #8f86c1);
+        }
+        
+        .details {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            width: 100%;
+        }
+        
+        .details-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffde7d;
+        }
+        
+        .zone-detail {
+            display: none;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .zone-detail h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zone-detail p {
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .partition-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .partition-info h3 {
+            margin-bottom: 15px;
+            color: #ffde7d;
+        }
+        
+        .partition-list {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .partition-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .partition-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .partition-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 1050px) {
+            .map-container {
+                width: 100%;
+                height: 350px;
+                transform: scale(0.95);
+                transform-origin: top center;
+            }
+            
+            .partition-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .zone-name {
+                font-size: 0.6rem;
+            }
+            
+            .zone-number {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Библиотека "Голос города"</h1>
+            <p class="subtitle">Интерактивная карта пространств и зон</p>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #ff6b6b, #ff8e8e);"></div>
+                    <span>Абонементы</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #4ecdc4, #6ae2d9);"></div>
+                    <span>Арт-объекты</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #ffa36c, #ffb98c);"></div>
+                    <span>Обслуживание</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #546de5, #6f82ec);"></div>
+                    <span>Залы искусств</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #ffde7d, #ffe9a8);"></div>
+                    <span>Многофункциональные залы</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="map-wrapper">
+            <div class="map-container">
+                <div class="zone zone-1" data-zone="6">
+                    <div class="zone-number">6</div>
+                    <div class="zone-name">Арт-объект "Голос города"</div>
+                </div>
+                
+                <div class="zone zone-2" data-zone="7">
+                    <div class="zone-number">7</div>
+                    <div class="zone-name">Гардероб</div>
+                </div>
+                
+                <div class="zone zone-3" data-zone="8">
+                    <div class="zone-number">8</div>
+                    <div class="zone-name">Перегородка ГКЛ</div>
+                </div>
+                
+                <div class="zone zone-4" data-zone="9">
+                    <div class="zone-number">9</div>
+                    <div class="zone-name">Абонемент</div>
+                </div>
+                
+                <div class="zone zone-5" data-zone="5">
+                    <div class="zone-number">5</div>
+                    <div class="zone-name">Детский абонемент</div>
+                </div>
+                
+                <div class="zone zone-6" data-zone="14">
+                    <div class="zone-number">14</div>
+                    <div class="zone-name">Читальный зал</div>
+                </div>
+                
+                <div class="zone zone-7" data-zone="10">
+                    <div class="zone-number">10</div>
+                    <div class="zone-name">Событийный зал</div>
+                </div>
+                
+                <div class="zone zone-8" data-zone="11">
+                    <div class="zone-number">11</div>
+                    <div class="zone-name">Хранение книг</div>
+                </div>
+                
+                <div class="zone zone-9" data-zone="12">
+                    <div class="zone-number">12</div>
+                    <div class="zone-name">Молодежный зал</div>
+                </div>
+                
+                <div class="zone zone-10-part1" data-zone="13">
+                    <div class="zone-number">13</div>
+                    <div class="zone-name">Зал искусств</div>
+                </div>
+                
+                <div class="zone zone-10-part2" data-zone="13">
+                    <div class="zone-number">13</div>
+                    <div class="zone-name">Зал искусств</div>
+                </div>
+                
+                <div class="zone zone-11" data-zone="13.1">
+                    <div class="zone-number">13.1</div>
+                    <div class="zone-name">Проектный офис</div>
+                </div>
+                
+                <div class="zone zone-12" data-zone="13.2">
+                    <div class="zone-number">13.2</div>
+                    <div class="zone-name">Медиасреда</div>
+                </div>
+                
+                <div class="zone zone-13" data-zone="13">
+                    <div class="zone-number">13</div>
+                    <div class="zone-name">Зал искусств</div>
+                </div>
+                
+                <div class="zone zone-13-1" data-zone="13.1">
+                    <div class="zone-number">13.1</div>
+                    <div class="zone-name">Проектный офис</div>
+                </div>
+                
+                <div class="zone zone-13-2" data-zone="13.2">
+                    <div class="zone-number">13.2</div>
+                    <div class="zone-name">Медиасреда</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="details">
+            <h2 class="details-title">Подробное описание зон</h2>
+            
+            <div class="zone-detail active" id="detail-5">
+                <h3><span class="zone-number">5</span> Абонемент для детей</h3>
+                <p>Специализированная зона для юных читателей с подборкой детской литературы, игровой зоной и пространством для творческих занятий.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-6">
+                <h3><span class="zone-number">6</span> Арт-объект "Голос города"</h3>
+                <p>Входная зона библиотеки, украшенная уникальным арт-объектом, создающим особую атмосферу и являющимся визитной карточкой библиотеки.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-7">
+                <h3><span class="zone-number">7</span> Гардероб</h3>
+                <p>Зона для хранения верхней одежды посетителей, оборудованная современными системами хранения.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-8">
+                <h3><span class="zone-number">8</span> Перегородка глухая из ГКЛ (не учтена проектом)</h3>
+                <p>Конструктивный элемент, не предусмотренный первоначальным проектом, но добавленный для зонирования пространства.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-9">
+                <h3><span class="zone-number">9</span> Абонемент</h3>
+                <p>Основная зона выдачи литературы для взрослых читателей, оснащенная автоматизированной системой учета книг.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-10">
+                <h3><span class="zone-number">10</span> Событийный зал</h3>
+                <p>Многофункциональный зал, оборудованный современной мультимедийной техникой для проведения лекций, презентаций, мастер-классов и других мероприятий.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-11">
+                <h3><span class="zone-number">11</span> Хранение книг</h3>
+                <p>Специализированное помещение для хранения книжного фонда с регулируемым микроклиматом и системой безопасности.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-12">
+                <h3><span class="zone-number">12</span> Молодежный зал</h3>
+                <p>Многофункциональный зал с амфитеатром, предназначенный для мероприятий, встреч и работы молодежных сообществ.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-13">
+                <h3><span class="zone-number">13</span> Зал искусств</h3>
+                <p>Арт-галерея и многофункциональное пространство для выставок, перформансов и творческих встреч.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-13.1">
+                <h3><span class="zone-number">13.1</span> Проектный офис</h3>
+                <p>Рабочее пространство для сотрудников библиотеки, занимающихся разработкой и реализацией проектов.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-13.2">
+                <h3><span class="zone-number">13.2</span> Медиасреда (подкастерная)</h3>
+                <p>Современная студия для записи подкастов, оснащенная профессиональным звуковым оборудованием.</p>
+            </div>
+            
+            <div class="zone-detail" id="detail-14">
+                <h3><span class="zone-number">14</span> Читальный зал</h3>
+                <p>Уникальное пространство, стилизованное под интерьер вагона поезда, создающее особую атмосферу для чтения и работы.</p>
+            </div>
+            
+            <div class="partition-info">
+                <h3>Типы перегородок в библиотеке</h3>
+                <ul class="partition-list">
+                    <li>
+                        <div class="partition-icon"></div>
+                        <span>Остекленная перегородка глухая</span>
+                    </li>
+                    <li>
+                        <div class="partition-icon"></div>
+                        <span>Остекленная перегородка с дверью</span>
+                    </li>
+                    <li>
+                        <div class="partition-icon"></div>
+                        <span>Перегородка глухая из ГКЛ (не учтена проектом)</span>
+                    </li>
+                    <li>
+                        <div class="partition-icon"></div>
+                        <span>Перегородка глухая из ГКЛ (учтена проектом)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Карта библиотеки "Голос города" | Все права защищены © 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const zones = document.querySelectorAll('.zone');
+            const zoneDetails = document.querySelectorAll('.zone-detail');
+            
+            // Сначала скрываем все описания, кроме первого
+            zoneDetails.forEach(detail => {
+                detail.classList.remove('active');
+            });
+            document.getElementById('detail-5').classList.add('active');
+            
+            zones.forEach(zone => {
+                zone.addEventListener('click', function() {
+                    const zoneId = this.getAttribute('data-zone');
+                    
+                    // Скрыть все описания
+                    zoneDetails.forEach(detail => {
+                        detail.classList.remove('active');
+                    });
+                    
+                    // Показать соответствующее описание
+                    const targetDetail = document.getElementById(`detail-${zoneId}`);
+                    if (targetDetail) {
+                        targetDetail.classList.add('active');
+                    }
+                    
+                    // Добавить визуальный эффект к выбранной зоне
+                    zones.forEach(z => {
+                        z.style.opacity = '0.7';
+                        z.style.zIndex = '1';
+                    });
+                    this.style.opacity = '1';
+                    this.style.zIndex = '10';
+                    
+                    // Плавная прокрутка к описанию
+                    targetDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

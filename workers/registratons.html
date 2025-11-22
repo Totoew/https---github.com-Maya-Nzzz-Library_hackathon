@@ -522,6 +522,131 @@
                 </div>
             </div>
         </div>
+        <!-- Навигационное меню для сотрудников (6 вкладок) -->
+<div class="bottom-nav">
+    <a href="all.html" class="nav-item">
+        <span class="nav-icon">👥</span>
+        <span class="nav-text">Читат.</span>
+    </a>
+    <a href="scan.html" class="nav-item">
+        <span class="nav-icon">📷</span>
+        <span class="nav-text">Скан</span>
+    </a>
+    <a href="profil_user.html" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span class="nav-text">Проф.</span>
+    </a>
+    <a href="statistic.html" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Стат.</span>
+    </a>
+    <a href="registratons.html" class="nav-item">
+        <span class="nav-icon">📝</span>
+        <span class="nav-text">Рег.</span>
+    </a>
+    <a href="new_event.html" class="nav-item">
+        <span class="nav-icon">📅</span>
+        <span class="nav-text">Событ.</span>
+    </a>
+</div>
+
+<style>
+.bottom-nav {
+    background: white;
+    border-top: 1px solid #e8dfd0;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 2px;
+    margin-top: auto;
+    flex-shrink: 0;
+    box-shadow: 0 -2px 8px rgba(156, 138, 107, 0.08);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #8c7b63;
+    padding: 4px 2px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    min-width: 38px;
+    flex: 1;
+    max-width: 55px;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: #f5f1e9;
+    color: #6d604c;
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(156, 138, 107, 0.3);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 3px;
+    background: #b8a17a;
+    border-radius: 2px;
+}
+
+.nav-icon {
+    font-size: 14px;
+    margin-bottom: 1px;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-icon {
+    transform: scale(1.15);
+    filter: brightness(1.2);
+}
+
+.nav-text {
+    font-size: 8px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+    letter-spacing: -0.2px;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-text {
+    font-weight: 700;
+    color: white;
+}
+</style>
+
+<script>
+// Подсветка активной страницы - исправленная версия
+document.addEventListener('DOMContentLoaded', function() {
+    // Получаем имя текущего файла
+    const currentPage = window.location.href.split('/').pop().split('?')[0];
+    console.log('Текущая страница:', currentPage); // Для отладки
+    
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        console.log('Сравниваем:', href, 'с', currentPage); // Для отладки
+        
+        if (href === currentPage) {
+            item.classList.add('active');
+            console.log('Найдено совпадение!'); // Для отладки
+        }
+    });
+});
+</script>
     </div>
 
     <!-- Уведомление -->
