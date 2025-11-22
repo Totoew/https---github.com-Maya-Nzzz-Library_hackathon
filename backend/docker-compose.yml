@@ -1,0 +1,26 @@
+services:
+  flask:
+    build: ./flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask:/app
+    depends_on:
+      - db
+    environment:
+      - FLASK_APP=app.py
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: db_library
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:
