@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта библиотеки №14</title>
     <style>
+        .back-btn {
+    background: #388E3C;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(56, 142, 60, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px auto 0;
+}
+
+.back-btn:hover {
+    background: #2E7D32;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 142, 60, 0.4);
+}
+
+.back-btn:active {
+    transform: translateY(0);
+}
         * {
             margin: 0;
             padding: 0;
@@ -380,6 +406,10 @@
     <div class="container">
         <header>
             <h1>Библиотека №14</h1>
+            <button class="back-btn" onclick="window.location.href='login.html'">
+    <span>←</span>
+    Вернуться в профиль
+</button>
             <p class="subtitle">Интерактивная карта пространств и зон</p>
         </header>
 
@@ -554,4 +584,3 @@
     </script>
 </body>
 </html>
-

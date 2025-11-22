@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Библиотека №14 - QR код</title>
     <style>
+        .map-btn {
+    background: #7FB685;
+    color: white;
+    border: none;
+    padding: 16px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(127, 182, 133, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto 25px;
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+}
+
+.map-btn:hover {
+    background: #6aa371;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(127, 182, 133, 0.4);
+}
+
+.map-btn:active {
+    transform: translateY(0);
+}
         .bottom-nav {
     background: white;
     border-top: 1px solid #e0e0e0;
@@ -276,6 +305,10 @@
                 <span>👤</span>
                 Хочу перейти в профиль
             </button>
+            <button class="map-btn" onclick="window.location.href='map.html'">
+    <span>🗺️</span>
+    Посмотреть карту библиотеки
+</button>
         </div>
         <!-- Навигационное меню -->
        <!-- Навигационное меню -->
