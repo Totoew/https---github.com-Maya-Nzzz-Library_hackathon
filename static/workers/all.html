@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #faf6f0;
@@ -20,7 +21,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .screen {
             background: white;
             border-radius: 16px;
@@ -35,7 +36,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #b8a17a, #9c8a6b);
             color: white;
@@ -46,25 +47,25 @@
             flex-shrink: 0;
             box-shadow: 0 2px 10px rgba(156, 138, 107, 0.2);
         }
-        
+
         .header-title {
             font-size: 20px;
             font-weight: 700;
         }
-        
+
         .header-icons {
             display: flex;
             gap: 15px;
             font-size: 18px;
         }
-        
+
         .nav-tabs {
             display: flex;
             background: #f5f1e9;
             border-bottom: 1px solid #e8dfd0;
             overflow-x: auto;
         }
-        
+
         .nav-tab {
             flex: 1;
             padding: 15px 12px;
@@ -79,39 +80,39 @@
             white-space: nowrap;
             min-width: 80px;
         }
-        
+
         .nav-tab.active {
             background: white;
             color: #6d604c;
             border-bottom: 2px solid #b8a17a;
         }
-        
+
         .content {
             padding: 20px;
             overflow-y: auto;
             flex: 1;
             background: #fefcf8;
         }
-        
+
         /* Стили для скроллбара */
         .content::-webkit-scrollbar {
             width: 6px;
         }
-        
+
         .content::-webkit-scrollbar-track {
             background: #f5f1e9;
             border-radius: 3px;
         }
-        
+
         .content::-webkit-scrollbar-thumb {
             background: #c8b8a0;
             border-radius: 3px;
         }
-        
+
         .content::-webkit-scrollbar-thumb:hover {
             background: #b8a17a;
         }
-        
+
         /* Секции */
         .section {
             background: linear-gradient(135deg, #fdfaf5, #f9f3e9);
@@ -120,7 +121,7 @@
             border: 1px solid #e8dfd0;
             margin-bottom: 20px;
         }
-        
+
         .section-title {
             font-size: 17px;
             font-weight: 700;
@@ -130,12 +131,12 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         /* Поиск */
         .search-container {
             margin-bottom: 15px;
         }
-        
+
         .search-input {
             width: 100%;
             padding: 12px 16px;
@@ -145,19 +146,19 @@
             background: white;
             color: #5d5240;
         }
-        
+
         .search-input:focus {
             outline: none;
             border-color: #b8a17a;
         }
-        
+
         /* Список пользователей */
         .users-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-        
+
         .user-item {
             display: flex;
             align-items: center;
@@ -169,12 +170,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .user-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(156, 138, 107, 0.1);
         }
-        
+
         .user-avatar {
             width: 45px;
             height: 45px;
@@ -188,30 +189,30 @@
             font-weight: 700;
             flex-shrink: 0;
         }
-        
+
         .user-info {
             flex: 1;
             min-width: 0;
         }
-        
+
         .user-name {
             font-size: 15px;
             font-weight: 600;
             color: #8c7b63;
             margin-bottom: 4px;
         }
-        
+
         .user-details {
             display: flex;
             gap: 10px;
         }
-        
+
         .user-detail {
             font-size: 11px;
             color: #a69984;
             font-weight: 500;
         }
-        
+
         /* Уведомления */
         .notification {
             position: fixed;
@@ -228,17 +229,18 @@
             font-weight: 600;
             font-size: 14px;
         }
-        
+
         /* Скрытые элементы */
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
         }
     </style>
 </head>
+
 <body>
     <div class="screen" id="mainScreen">
         <div class="header">
@@ -247,9 +249,9 @@
                 <span>📚</span>
             </div>
         </div>
-        
-        
-        
+
+
+
         <div class="content">
             <!-- Вкладка всех пользователей -->
             <div class="tab-content active" id="usersTab">
@@ -258,143 +260,143 @@
                         <span>👥</span>
                         Список читателей
                     </div>
-                    
+
                     <div class="search-container">
-                        <input type="text" class="search-input" id="userSearch" 
-                               placeholder="Поиск по ФИО..." oninput="filterUsers()">
+                        <input type="text" class="search-input" id="userSearch" placeholder="Поиск по ФИО..."
+                            oninput="filterUsers()">
                     </div>
-                    
+
                     <div class="users-list" id="usersList">
                         <!-- Список пользователей будет сгенерирован JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
-       <!-- Навигационное меню для сотрудников (6 вкладок) -->
-<div class="bottom-nav">
-    <a href="all.html" class="nav-item">
-        <span class="nav-icon">👥</span>
-        <span class="nav-text">Читат.</span>
-    </a>
-    <a href="scan.html" class="nav-item">
-        <span class="nav-icon">📷</span>
-        <span class="nav-text">Скан</span>
-    </a>
-    <a href="profil_user.html" class="nav-item">
-        <span class="nav-icon">👤</span>
-        <span class="nav-text">Проф.</span>
-    </a>
-    <a href="statistic.html" class="nav-item">
-        <span class="nav-icon">📊</span>
-        <span class="nav-text">Стат.</span>
-    </a>
-    <a href="registratons.html" class="nav-item">
-        <span class="nav-icon">📝</span>
-        <span class="nav-text">Рег.</span>
-    </a>
-    <a href="new_event.html" class="nav-item">
-        <span class="nav-icon">📅</span>
-        <span class="nav-text">Событ.</span>
-    </a>
-</div>
+        <!-- Навигационное меню для сотрудников (6 вкладок) -->
+        <div class="bottom-nav">
+            <a href="all.html" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Читат.</span>
+            </a>
+            <a href="scan.html" class="nav-item">
+                <span class="nav-icon">📷</span>
+                <span class="nav-text">Скан</span>
+            </a>
+            <a href="profil_user.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">Проф.</span>
+            </a>
+            <a href="statistic.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Стат.</span>
+            </a>
+            <a href="registratons.html" class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Рег.</span>
+            </a>
+            <a href="new_event.html" class="nav-item">
+                <span class="nav-icon">📅</span>
+                <span class="nav-text">Событ.</span>
+            </a>
+        </div>
 
-<style>
-.bottom-nav {
-    background: white;
-    border-top: 1px solid #e8dfd0;
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 2px;
-    margin-top: auto;
-    flex-shrink: 0;
-    box-shadow: 0 -2px 8px rgba(156, 138, 107, 0.08);
-}
+        <style>
+            .bottom-nav {
+                background: white;
+                border-top: 1px solid #e8dfd0;
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 2px;
+                margin-top: auto;
+                flex-shrink: 0;
+                box-shadow: 0 -2px 8px rgba(156, 138, 107, 0.08);
+            }
 
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #8c7b63;
-    padding: 4px 2px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    min-width: 38px;
-    flex: 1;
-    max-width: 55px;
-    position: relative;
-}
+            .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: #8c7b63;
+                padding: 4px 2px;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                min-width: 38px;
+                flex: 1;
+                max-width: 55px;
+                position: relative;
+            }
 
-.nav-item:hover {
-    background: #f5f1e9;
-    color: #6d604c;
-}
+            .nav-item:hover {
+                background: #f5f1e9;
+                color: #6d604c;
+            }
 
-.nav-item.active {
-    background: linear-gradient(135deg, #b8a17a, #9c8a6b);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(156, 138, 107, 0.3);
-}
+            .nav-item.active {
+                background: linear-gradient(135deg, #b8a17a, #9c8a6b);
+                color: white;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(156, 138, 107, 0.3);
+            }
 
-.nav-item.active::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 18px;
-    height: 3px;
-    background: #b8a17a;
-    border-radius: 2px;
-}
+            .nav-item.active::before {
+                content: '';
+                position: absolute;
+                top: -3px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 18px;
+                height: 3px;
+                background: #b8a17a;
+                border-radius: 2px;
+            }
 
-.nav-icon {
-    font-size: 14px;
-    margin-bottom: 1px;
-    transition: all 0.3s ease;
-}
+            .nav-icon {
+                font-size: 14px;
+                margin-bottom: 1px;
+                transition: all 0.3s ease;
+            }
 
-.nav-item.active .nav-icon {
-    transform: scale(1.15);
-    filter: brightness(1.2);
-}
+            .nav-item.active .nav-icon {
+                transform: scale(1.15);
+                filter: brightness(1.2);
+            }
 
-.nav-text {
-    font-size: 8px;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1;
-    letter-spacing: -0.2px;
-    transition: all 0.3s ease;
-}
+            .nav-text {
+                font-size: 8px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 1;
+                letter-spacing: -0.2px;
+                transition: all 0.3s ease;
+            }
 
-.nav-item.active .nav-text {
-    font-weight: 700;
-    color: white;
-}
-</style>
+            .nav-item.active .nav-text {
+                font-weight: 700;
+                color: white;
+            }
+        </style>
 
-<script>
-// Подсветка активной страницы - исправленная версия
-document.addEventListener('DOMContentLoaded', function() {
-    // Получаем имя текущего файла
-    const currentPage = window.location.href.split('/').pop().split('?')[0];
-    console.log('Текущая страница:', currentPage); // Для отладки
-    
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(item => {
-        const href = item.getAttribute('href');
-        console.log('Сравниваем:', href, 'с', currentPage); // Для отладки
-        
-        if (href === currentPage) {
-            item.classList.add('active');
-            console.log('Найдено совпадение!'); // Для отладки
-        }
-    });
-});
-</script>
+        <script>
+            // Подсветка активной страницы - исправленная версия
+            document.addEventListener('DOMContentLoaded', function () {
+                // Получаем имя текущего файла
+                const currentPage = window.location.href.split('/').pop().split('?')[0];
+                console.log('Текущая страница:', currentPage); // Для отладки
+
+                const navItems = document.querySelectorAll('.nav-item');
+
+                navItems.forEach(item => {
+                    const href = item.getAttribute('href');
+                    console.log('Сравниваем:', href, 'с', currentPage); // Для отладки
+
+                    if (href === currentPage) {
+                        item.classList.add('active');
+                        console.log('Найдено совпадение!'); // Для отладки
+                    }
+                });
+            });
+        </script>
     </div>
 
     <!-- Уведомление -->
@@ -457,60 +459,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 address: "ул. Садовая, 20, кв. 7",
                 status: "Активен",
                 booksCount: 1
-            },
-            {
-                id: "LB12345683",
-                lastName: "Федорова",
-                firstName: "Ольга",
-                middleName: "Игоревна",
-                phone: "+7 (912) 345-67-94",
-                email: "fedorova@email.com",
-                address: "ул. Парковая, 5, кв. 9",
-                status: "Активен",
-                booksCount: 0
-            },
-            {
-                id: "LB12345684",
-                lastName: "Васильев",
-                firstName: "Сергей",
-                middleName: "Михайлович",
-                phone: "+7 (912) 345-67-95",
-                email: "vasiliev@email.com",
-                address: "ул. Лесная, 12, кв. 4",
-                status: "Просрочка",
-                booksCount: 1
-            },
-            {
-                id: "LB12345685",
-                lastName: "Алексеева",
-                firstName: "Анна",
-                middleName: "Дмитриевна",
-                phone: "+7 (912) 345-67-96",
-                email: "alekseeva@email.com",
-                address: "ул. Молодежная, 18, кв. 11",
-                status: "Активен",
-                booksCount: 2
             }
         ];
 
+        // Инициализация данных
+        function initializeUsersData() {
+            // Проверяем, есть ли уже данные в localStorage
+            const existingUsers = localStorage.getItem('libraryUsers');
+            if (!existingUsers) {
+                // Если нет, сохраняем тестовые данные
+                localStorage.setItem('libraryUsers', JSON.stringify(usersData));
+            }
+        }
         // Показать вкладку
         function showTab(tabName) {
             // Скрыть все вкладки
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
+
             // Убрать активный класс со всех кнопок
             document.querySelectorAll('.nav-tab').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             // Показать выбранную вкладку
             document.getElementById(tabName + 'Tab').classList.add('active');
-            
+
             // Сделать кнопку активной
             event.target.classList.add('active');
-            
+
             // Если открываем вкладку пользователей, обновляем список
             if (tabName === 'users') {
                 renderUsersList();
@@ -520,67 +498,81 @@ document.addEventListener('DOMContentLoaded', function() {
         // Отображение списка пользователей
         function renderUsersList(filteredUsers = null) {
             const usersList = document.getElementById('usersList');
-            const usersToRender = filteredUsers || usersData;
-            
+
+            // Получаем пользователей из localStorage
+            let usersToRender = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+
+            // Применяем фильтр если есть
+            if (filteredUsers) {
+                usersToRender = filteredUsers;
+            }
+
             usersList.innerHTML = '';
-            
+
             if (usersToRender.length === 0) {
                 usersList.innerHTML = `
-                    <div style="text-align: center; padding: 30px; color: #a69984;">
-                        <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
-                        <div>Пользователи не найдены</div>
-                    </div>
-                `;
+            <div style="text-align: center; padding: 30px; color: #a69984;">
+                <div style="font-size: 48px; margin-bottom: 10px;">🔍</div>
+                <div>Пользователи не найдены</div>
+            </div>
+        `;
                 return;
             }
-            
+
             usersToRender.forEach(user => {
                 const fullName = `${user.lastName} ${user.firstName} ${user.middleName}`;
                 const avatar = user.lastName[0] + user.firstName[0];
-                
+
                 const userElement = document.createElement('div');
                 userElement.className = 'user-item';
                 userElement.onclick = () => selectUser(user);
-                
+
                 userElement.innerHTML = `
-                    <div class="user-avatar">${avatar}</div>
-                    <div class="user-info">
-                        <div class="user-name">${fullName}</div>
-                        <div class="user-details">
-                            <div class="user-detail">ID: ${user.id}</div>
-                            <div class="user-detail">📚 Книг: ${user.booksCount}</div>
-                            <div class="user-detail">${user.status}</div>
-                        </div>
-                    </div>
-                `;
-                
+            <div class="user-avatar">${avatar}</div>
+            <div class="user-info">
+                <div class="user-name">${fullName}</div>
+                <div class="user-details">
+                    <div class="user-detail">ID: ${user.id}</div>
+                    <div class="user-detail">📚 Книг: ${user.booksCount}</div>
+                    <div class="user-detail">${user.status}</div>
+                </div>
+            </div>
+        `;
+
                 usersList.appendChild(userElement);
             });
         }
 
         // Выбор пользователя
         function selectUser(user) {
-            // Здесь можно добавить переход на страницу профиля пользователя
-            showNotification(`Выбран пользователь: ${user.lastName} ${user.firstName}`, 'success');
-            
-            // В реальном приложении здесь будет переход на страницу профиля
-            // window.location.href = `profile.html?id=${user.id}`;
+            console.log('Выбран пользователь:', user); // Для отладки
+
+            // Сохраняем ID выбранного пользователя в localStorage
+            localStorage.setItem('selectedUserId', user.id);
+
+            // Переходим на страницу профиля
+            window.location.href = 'profil_user.html';
         }
 
         // Фильтрация пользователей
         function filterUsers() {
             const searchTerm = document.getElementById('userSearch').value.toLowerCase();
-            
+
             if (!searchTerm) {
                 renderUsersList();
                 return;
             }
-            
-            const filteredUsers = usersData.filter(user => {
+
+            // Получаем всех пользователей из localStorage
+            const allUsers = JSON.parse(localStorage.getItem('libraryUsers') || '[]');
+
+            const filteredUsers = allUsers.filter(user => {
                 const fullName = `${user.lastName} ${user.firstName} ${user.middleName}`.toLowerCase();
-                return fullName.includes(searchTerm) || user.id.toLowerCase().includes(searchTerm);
+                return fullName.includes(searchTerm) ||
+                    user.id.toLowerCase().includes(searchTerm) ||
+                    user.phone.toLowerCase().includes(searchTerm);
             });
-            
+
             renderUsersList(filteredUsers);
         }
 
@@ -589,17 +581,32 @@ document.addEventListener('DOMContentLoaded', function() {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.style.display = 'block';
-            
+
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
         }
 
         // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeUsersData();
             renderUsersList();
-            showNotification('Список пользователей загружен', 'success');
+            showNotification('Список читателей загружен', 'success');
+        });
+
+        // Подсветка активной страницы
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.href.split('/').pop().split('?')[0];
+            const navItems = document.querySelectorAll('.nav-item');
+
+            navItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href === currentPage) {
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>
+
 </html>
