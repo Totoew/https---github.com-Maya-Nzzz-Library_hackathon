@@ -236,6 +236,45 @@
             background: #45a049;
         }
         
+        .btn-map {
+    background: #9C27B0;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.btn-map:hover {
+    background: #7B1FA2;
+}
+
+/* Обновите стили для контейнера кнопок */
+.event-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.event-actions .btn-primary,
+.event-actions .btn-secondary,
+.event-actions .btn-disabled {
+    flex: 2;
+    min-width: 120px;
+}
+
+.event-actions .btn-map {
+    flex: 1;
+    min-width: 100px;
+}
+
         .btn-secondary {
             background: #81C784;
             color: white;
@@ -359,224 +398,223 @@
             
             <div class="events-list">
                 <!-- Событие 1 -->
-                <div class="event-card">
-                    <div class="event-header">
-                        <div class="event-date">
-                            <span>📚</span>
-                            СЕГОДНЯ, 15:00
-                        </div>
-                        <div class="event-status">Свободные места</div>
-                    </div>
-                    
-                    <div class="event-title">Литературный вечер</div>
-                    <div class="event-description">"Современная поэзия: новые имена и тенденции"</div>
-                    
-                    <div class="event-details">
-                        <div class="event-detail">
-                            <span>📍</span>
-                            Читальный зал, 2 этаж
-                        </div>
-                        <div class="event-detail">
-                            <span>👥</span>
-                            12 из 25 мест свободно
-                        </div>
-                        <div class="event-detail">
-                            <span>⏰</span>
-                            Продолжительность: 2 часа
-                        </div>
-                    </div>
-                    
-                    <div class="event-actions">
-                        <button class="btn-primary">✅ Я пойду</button>
-                    </div>
-                </div>
-                
-                <!-- Событие 2 -->
-                <div class="event-card">
-                    <div class="event-header">
-                        <div class="event-date">
-                            <span>🎯</span>
-                            ЗАВТРА, 18:00
-                        </div>
-                        <div class="event-status">Мало мест</div>
-                    </div>
-                    
-                    <div class="event-title">Мастер-класс по скорочтению</div>
-                    <div class="event-description">Техники быстрого чтения и запоминания информации</div>
-                    
-                    <div class="event-details">
-                        <div class="event-detail">
-                            <span>📍</span>
-                            Конференц-зал
-                        </div>
-                        <div class="event-detail">
-                            <span>👥</span>
-                            3 из 15 мест свободно
-                        </div>
-                        <div class="event-detail">
-                            <span>⏰</span>
-                            Продолжительность: 1.5 часа
-                        </div>
-                    </div>
-                    
-                    <div class="event-actions">
-                        <button class="btn-secondary">Записаться</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Предстоящие мероприятия -->
-            <div class="upcoming-section">
-                <div class="section-title">
-                    <span>📋</span>
-                    Предстоящие мероприятия
-                </div>
-                
-                <div class="events-list">
-                    <!-- Событие 3 -->
-                    <div class="event-card">
-                        <div class="event-header">
-                            <div class="event-date">
-                                <span>🎨</span>
-                                25 ДЕК, 16:00
-                            </div>
-                            <div class="event-status">Запись открыта</div>
-                        </div>
-                        
-                        <div class="event-title">Творческая встреча с писателем</div>
-                        <div class="event-description">Встреча с известным современным автором</div>
-                        
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span>📍</span>
-                                Актовый зал
-                            </div>
-                            <div class="event-detail">
-                                <span>👥</span>
-                                20 из 50 мест свободно
-                            </div>
-                        </div>
-                        
-                        <div class="event-actions">
-                            <button class="btn-secondary">Записаться</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Событие 4 -->
-                    <div class="event-card">
-                        <div class="event-header">
-                            <div class="event-date">
-                                <span>👶</span>
-                                28 ДЕК, 11:00
-                            </div>
-                            <div class="event-status">Запись закрыта</div>
-                        </div>
-                        
-                        <div class="event-title">Детский литературный кружок</div>
-                        <div class="event-description">Чтение и обсуждение детских книг</div>
-                        
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span>📍</span>
-                                Детский зал
-                            </div>
-                            <div class="event-detail">
-                                <span>👥</span>
-                                Все места заняты
-                            </div>
-                        </div>
-                        
-                        <div class="event-actions">
-                            <button class="btn-disabled">Запись закрыта</button>
-                        </div>
-                    </div>
+                <!-- Событие 1 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>📚</span>
+            СЕГОДНЯ, 15:00
+        </div>
+        <div class="event-status">Свободные места</div>
+    </div>
+    
+    <div class="event-title">Литературный вечер</div>
+    <div class="event-description">"Современная поэзия: новые имена и тенденции"</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №3, 2 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            12 из 25 мест свободно
+        </div>
+        <div class="event-detail">
+            <span>⏰</span>
+            Продолжительность: 2 часа
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-primary">✅ Я пойду</button>
+        <button class="btn-map" onclick="openMap(3)">🗺️ На карте</button>
+    </div>
+</div>
 
-                    <!-- Событие 5 -->
-                    <div class="event-card">
-                        <div class="event-header">
-                            <div class="event-date">
-                                <span>📖</span>
-                                30 ДЕК, 14:00
-                            </div>
-                            <div class="event-status">Новое</div>
-                        </div>
-                        
-                        <div class="event-title">Клуб книголюбов</div>
-                        <div class="event-description">Обсуждение книги месяца и выбор следующей</div>
-                        
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span>📍</span>
-                                Кофейня библиотеки
-                            </div>
-                            <div class="event-detail">
-                                <span>👥</span>
-                                15 из 20 мест свободно
-                            </div>
-                        </div>
-                        
-                        <div class="event-actions">
-                            <button class="btn-secondary">Записаться</button>
-                        </div>
-                    </div>
+<!-- Событие 2 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>🎯</span>
+            ЗАВТРА, 18:00
+        </div>
+        <div class="event-status">Мало мест</div>
+    </div>
+    
+    <div class="event-title">Мастер-класс по скорочтению</div>
+    <div class="event-description">Техники быстрого чтения и запоминания информации</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №7, 1 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            3 из 15 мест свободно
+        </div>
+        <div class="event-detail">
+            <span>⏰</span>
+            Продолжительность: 1.5 часа
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-secondary">Записаться</button>
+        <button class="btn-map" onclick="openMap(7)">🗺️ На карте</button>
+    </div>
+</div>
 
-                    <!-- Событие 6 -->
-                    <div class="event-card">
-                        <div class="event-header">
-                            <div class="event-date">
-                                <span>🎭</span>
-                                5 ЯНВ, 19:00
-                            </div>
-                            <div class="event-status">Скоро</div>
-                        </div>
-                        
-                        <div class="event-title">Театральные чтения</div>
-                        <div class="event-description">Драматические чтения классических произведений</div>
-                        
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span>📍</span>
-                                Актовый зал
-                            </div>
-                            <div class="event-detail">
-                                <span>👥</span>
-                                30 из 40 мест свободно
-                            </div>
-                        </div>
-                        
-                        <div class="event-actions">
-                            <button class="btn-secondary">Записаться</button>
-                        </div>
-                    </div>
+<!-- Событие 3 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>🎨</span>
+            25 ДЕК, 16:00
+        </div>
+        <div class="event-status">Запись открыта</div>
+    </div>
+    
+    <div class="event-title">Творческая встреча с писателем</div>
+    <div class="event-description">Встреча с известным современным автором</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №12, 3 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            20 из 50 мест свободно
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-secondary">Записаться</button>
+        <button class="btn-map" onclick="openMap(12)">🗺️ На карте</button>
+    </div>
+</div>
 
-                    <!-- Событие 7 -->
-                    <div class="event-card">
-                        <div class="event-header">
-                            <div class="event-date">
-                                <span>💻</span>
-                                8 ЯНВ, 17:00
-                            </div>
-                            <div class="event-status">Онлайн</div>
-                        </div>
-                        
-                        <div class="event-title">Цифровая грамотность</div>
-                        <div class="event-description">Работа с электронными ресурсами библиотеки</div>
-                        
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span>📍</span>
-                                Онлайн / Компьютерный класс
-                            </div>
-                            <div class="event-detail">
-                                <span>👥</span>
-                                25 из 30 мест свободно
-                            </div>
-                        </div>
-                        
-                        <div class="event-actions">
-                            <button class="btn-secondary">Записаться</button>
-                        </div>
-                    </div>
+<!-- Событие 4 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>👶</span>
+            28 ДЕК, 11:00
+        </div>
+        <div class="event-status">Запись закрыта</div>
+    </div>
+    
+    <div class="event-title">Детский литературный кружок</div>
+    <div class="event-description">Чтение и обсуждение детских книг</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №5, 1 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            Все места заняты
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-disabled">Запись закрыта</button>
+        <button class="btn-map" onclick="openMap(5)">🗺️ На карте</button>
+    </div>
+</div>
+
+<!-- Событие 5 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>📖</span>
+            30 ДЕК, 14:00
+        </div>
+        <div class="event-status">Новое</div>
+    </div>
+    
+    <div class="event-title">Клуб книголюбов</div>
+    <div class="event-description">Обсуждение книги месяца и выбор следующей</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №8, 2 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            15 из 20 мест свободно
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-secondary">Записаться</button>
+        <button class="btn-map" onclick="openMap(8)">🗺️ На карте</button>
+    </div>
+</div>
+
+<!-- Событие 6 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>🎭</span>
+            5 ЯНВ, 19:00
+        </div>
+        <div class="event-status">Скоро</div>
+    </div>
+    
+    <div class="event-title">Театральные чтения</div>
+    <div class="event-description">Драматические чтения классических произведений</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №14, 3 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            30 из 40 мест свободно
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-secondary">Записаться</button>
+        <button class="btn-map" onclick="openMap(14)">🗺️ На карте</button>
+    </div>
+</div>
+
+<!-- Событие 7 -->
+<div class="event-card">
+    <div class="event-header">
+        <div class="event-date">
+            <span>💻</span>
+            8 ЯНВ, 17:00
+        </div>
+        <div class="event-status">Онлайн</div>
+    </div>
+    
+    <div class="event-title">Цифровая грамотность</div>
+    <div class="event-description">Работа с электронными ресурсами библиотеки</div>
+    
+    <div class="event-details">
+        <div class="event-detail">
+            <span>📍</span>
+            Помещение №2, 1 этаж
+        </div>
+        <div class="event-detail">
+            <span>👥</span>
+            25 из 30 мест свободно
+        </div>
+    </div>
+    
+    <div class="event-actions">
+        <button class="btn-secondary">Записаться</button>
+        <button class="btn-map" onclick="openMap(2)">🗺️ На карте</button>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -619,64 +657,327 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
         // Обработчики для кнопок записи
-        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (this.classList.contains('btn-disabled')) return;
+       // Подсветка активной страницы
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href === currentPage) {
+            item.classList.add('active');
+        }
+    });
+});
+
+// Хранилище записей на мероприятия
+let eventRegistrations = {
+    'Литературный вечер': false,
+    'Мастер-класс по скорочтению': false,
+    'Творческая встреча с писателем': false,
+    'Детский литературный кружок': false,
+    'Клуб книголюбов': false,
+    'Театральные чтения': false,
+    'Цифровая грамотность': false
+};
+
+// Функция записи на мероприятие
+function registerForEvent(button) {
+    const eventCard = button.closest('.event-card');
+    const eventTitle = eventCard.querySelector('.event-title').textContent;
+    const eventStatus = eventCard.querySelector('.event-status');
+    const seatsInfo = eventCard.querySelector('.event-detail:nth-child(2)');
+    
+    // Визуальная обратная связь
+    const originalText = button.textContent;
+    button.textContent = '⏳ Записываю...';
+    button.style.opacity = '0.7';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        // Обновляем статус записи
+        eventRegistrations[eventTitle] = true;
+        
+        // Обновляем интерфейс
+        button.textContent = '❌ Отменить запись';
+        button.style.background = '#f44336';
+        button.classList.remove('btn-primary', 'btn-secondary');
+        button.classList.add('btn-cancel');
+        button.disabled = false;
+        button.onclick = function() { cancelRegistration(this); };
+        
+        // Обновляем информацию о местах
+        updateSeatsInfo(seatsInfo, -1);
+        
+        // Обновляем статус мероприятия
+        if (eventStatus.textContent === 'Свободные места') {
+            eventStatus.textContent = 'Вы записаны';
+            eventStatus.style.background = '#4CAF50';
+        } else if (eventStatus.textContent === 'Мало мест') {
+            eventStatus.textContent = 'Вы записаны';
+            eventStatus.style.background = '#4CAF50';
+        }
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            alert(`✅ Вы успешно записались на мероприятие: "${eventTitle}"`);
+        }, 500);
+    }, 1500);
+}
+
+// Функция отмены записи
+function cancelRegistration(button) {
+    const eventCard = button.closest('.event-card');
+    const eventTitle = eventCard.querySelector('.event-title').textContent;
+    const eventStatus = eventCard.querySelector('.event-status');
+    const seatsInfo = eventCard.querySelector('.event-detail:nth-child(2)');
+    
+    // Подтверждение отмены
+    const confirmCancel = confirm(`Вы уверены, что хотите отменить запись на мероприятие "${eventTitle}"?`);
+    
+    if (!confirmCancel) return;
+    
+    // Визуальная обратная связь
+    button.textContent = '⏳ Отменяю...';
+    button.style.opacity = '0.7';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        // Обновляем статус записи
+        eventRegistrations[eventTitle] = false;
+        
+        // Обновляем интерфейс
+        button.textContent = 'Записаться';
+        button.style.background = '';
+        button.classList.remove('btn-cancel');
+        button.classList.add('btn-secondary');
+        button.disabled = false;
+        button.onclick = function() { registerForEvent(this); };
+        
+        // Обновляем информацию о местах
+        updateSeatsInfo(seatsInfo, 1);
+        
+        // Обновляем статус мероприятия
+        if (eventStatus.textContent === 'Вы записаны') {
+            // Возвращаем исходный статус на основе количества свободных мест
+            const seatsText = seatsInfo.textContent;
+            const freeSeats = parseInt(seatsText.match(/\d+/)[0]);
+            const totalSeats = parseInt(seatsText.match(/из (\d+)/)[1]);
+            
+            if (freeSeats <= 3) {
+                eventStatus.textContent = 'Мало мест';
+                eventStatus.style.background = '#FF9800';
+            } else {
+                eventStatus.textContent = 'Свободные места';
+                eventStatus.style.background = '#81C784';
+            }
+        }
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            alert(`❌ Вы отменили запись на мероприятие: "${eventTitle}"`);
+        }, 500);
+    }, 1500);
+}
+
+// Функция обновления информации о местах
+function updateSeatsInfo(seatsElement, change) {
+    const seatsText = seatsElement.textContent;
+    const freeSeats = parseInt(seatsText.match(/\d+/)[0]);
+    const totalSeats = parseInt(seatsText.match(/из (\d+)/)[1]);
+    
+    const newFreeSeats = freeSeats + change;
+    seatsElement.textContent = `👥 ${newFreeSeats} из ${totalSeats} мест свободно`;
+    
+    // Обновляем цвет текста в зависимости от количества мест
+    if (newFreeSeats <= 3) {
+        seatsElement.style.color = '#FF9800';
+        seatsElement.style.fontWeight = '600';
+    } else {
+        seatsElement.style.color = '#7D7D7D';
+        seatsElement.style.fontWeight = 'normal';
+    }
+}
+
+// Функция для кнопки "Я пойду" (особый случай)
+function confirmAttendance(button) {
+    const eventCard = button.closest('.event-card');
+    const eventTitle = eventCard.querySelector('.event-title').textContent;
+    
+    // Визуальная обратная связь
+    button.textContent = '⏳ Подтверждаю...';
+    button.style.opacity = '0.7';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        // Обновляем статус записи
+        eventRegistrations[eventTitle] = true;
+        
+        // Обновляем интерфейс
+        button.textContent = '✅ Я пойду';
+        button.style.background = '#81C784';
+        button.disabled = true;
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            alert(`✅ Вы подтвердили участие в мероприятии: "${eventTitle}"`);
+        }, 500);
+    }, 1500);
+}
+
+// Инициализация обработчиков событий
+function initializeEventHandlers() {
+    // Обработчики для кнопок "Записаться"
+    document.querySelectorAll('.btn-secondary').forEach(btn => {
+        btn.addEventListener('click', function() {
+            registerForEvent(this);
+        });
+    });
+    
+    // Обработчик для кнопки "Я пойду"
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+        confirmAttendance(this);
+    });
+    
+    // Восстановление состояния записей при загрузке
+    Object.keys(eventRegistrations).forEach(eventTitle => {
+        if (eventRegistrations[eventTitle]) {
+            const eventCard = findEventCardByTitle(eventTitle);
+            if (eventCard) {
+                const button = eventCard.querySelector('.btn-secondary, .btn-primary');
+                const eventStatus = eventCard.querySelector('.event-status');
+                const seatsInfo = eventCard.querySelector('.event-detail:nth-child(2)');
                 
-                const eventTitle = this.closest('.event-card').querySelector('.event-title').textContent;
-                const originalText = this.textContent;
-                
-                // Визуальная обратная связь
-                this.textContent = '⏳ Записываю...';
-                this.style.opacity = '0.7';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    this.textContent = '✅ Записан(а)';
-                    this.style.background = '#81C784';
-                    this.classList.remove('btn-primary', 'btn-secondary');
-                    this.classList.add('btn-disabled');
-                    this.disabled = false;
+                if (button) {
+                    if (button.classList.contains('btn-primary')) {
+                        button.textContent = '✅ Я пойду';
+                        button.style.background = '#81C784';
+                        button.disabled = true;
+                    } else {
+                        button.textContent = '❌ Отменить запись';
+                        button.style.background = '#f44336';
+                        button.classList.remove('btn-secondary');
+                        button.classList.add('btn-cancel');
+                        button.onclick = function() { cancelRegistration(this); };
+                    }
                     
-                    // Показываем уведомление
-                    setTimeout(() => {
-                        alert(`Вы успешно записались на мероприятие: "${eventTitle}"`);
-                    }, 500);
-                }, 1500);
-            });
+                    eventStatus.textContent = 'Вы записаны';
+                    eventStatus.style.background = '#4CAF50';
+                    
+                    // Обновляем места
+                    updateSeatsInfo(seatsInfo, -1);
+                }
+            }
+        }
+    });
+}
+
+// Вспомогательная функция для поиска карточки мероприятия по названию
+function findEventCardByTitle(title) {
+    const eventCards = document.querySelectorAll('.event-card');
+    for (let card of eventCards) {
+        if (card.querySelector('.event-title').textContent === title) {
+            return card;
+        }
+    }
+    return null;
+}
+
+// Обработчики для фильтров
+document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab').forEach(t => {
+            t.classList.remove('active');
         });
+        this.classList.add('active');
         
-        // Обработчики для фильтров
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Убираем активный класс у всех вкладок
-                document.querySelectorAll('.filter-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                
-                // Добавляем активный класс текущей вкладке
-                this.classList.add('active');
-                
-                // Здесь можно добавить логику фильтрации мероприятий
-                const filterType = this.textContent;
-                console.log(`Фильтр: ${filterType}`);
-            });
-        });
+        const filterType = this.textContent;
+        console.log(`Фильтр: ${filterType}`);
+    });
+});
+
+// Анимация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    const eventCards = document.querySelectorAll('.event-card');
+    eventCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
         
-        // Анимация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            const eventCards = document.querySelectorAll('.event-card');
-            eventCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'all 0.5s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
-        });
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 * index);
+    });
+    
+    // Инициализация обработчиков событий
+    initializeEventHandlers();
+});
+
+// Функция для открытия карты с указанием помещения
+function openMap(roomNumber) {
+    // Сохраняем номер помещения в localStorage для использования на странице карты
+    localStorage.setItem('selectedRoom', roomNumber);
+    
+    // Переходим на страницу карты
+    window.location.href = 'map.html';
+}
+
+// Функция для получения информации о помещении
+function getRoomInfo(roomNumber) {
+    const roomInfo = {
+        1: { name: "Главный читальный зал", floor: 1, capacity: 50 },
+        2: { name: "Компьютерный класс", floor: 1, capacity: 30 },
+        3: { name: "Конференц-зал", floor: 2, capacity: 25 },
+        4: { name: "Медиатека", floor: 1, capacity: 20 },
+        5: { name: "Детский зал", floor: 1, capacity: 25 },
+        6: { name: "Зал периодики", floor: 2, capacity: 35 },
+        7: { name: "Учебный класс", floor: 1, capacity: 15 },
+        8: { name: "Кофейня библиотеки", floor: 2, capacity: 20 },
+        9: { name: "Архив", floor: 3, capacity: 10 },
+        10: { name: "Зал редких книг", floor: 3, capacity: 15 },
+        11: { name: "Переговорная 1", floor: 2, capacity: 8 },
+        12: { name: "Актовый зал", floor: 3, capacity: 50 },
+        13: { name: "Переговорная 2", floor: 2, capacity: 6 },
+        14: { name: "Выставочный зал", floor: 3, capacity: 40 }
+    };
+    
+    return roomInfo[roomNumber] || { name: "Помещение", floor: 1, capacity: 20 };
+}
+
+// Функция для автоматического обновления информации о помещениях
+function updateRoomInfo() {
+    document.querySelectorAll('.event-detail:first-child').forEach(detail => {
+        const text = detail.textContent;
+        const roomMatch = text.match(/Помещение №(\d+)/);
+        
+        if (roomMatch) {
+            const roomNumber = parseInt(roomMatch[1]);
+            const roomInfo = getRoomInfo(roomNumber);
+            detail.innerHTML = `<span>📍</span> ${roomInfo.name}, ${roomInfo.floor} этаж`;
+        }
+    });
+}
+
+// Вызываем при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    updateRoomInfo();
+    
+    // Остальной код инициализации...
+    const eventCards = document.querySelectorAll('.event-card');
+    eventCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 * index);
+    });
+    
+    initializeEventHandlers();
+});
     </script>
 </body>
 </html>

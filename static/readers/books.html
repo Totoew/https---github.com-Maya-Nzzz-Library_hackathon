@@ -183,6 +183,11 @@
            color: white;
            border-color: #4CAF50;
        }
+
+       .status-reading {
+    background: #FF9800;
+    color: white;
+}
       
        /* Карточки книг */
        .books-list {
@@ -587,6 +592,38 @@
                        </button>
                    </div>
                </div>
+
+               <!-- Пример книги, которая сейчас на руках -->
+<div class="book-card">
+    <div class="book-header">
+        <div class="book-cover">БП</div>
+        <div class="book-info">
+            <div class="book-title">Братья Карамазовы</div>
+            <div class="book-author">Ф.М. Достоевский</div>
+            <div class="status-badge status-reading">На руках</div>
+        </div>
+    </div>
+    
+    <div class="dates">
+        <div class="date-item">
+            <div class="date-label">Дата выдачи:</div>
+            <div class="date-value">05.12.2024</div>
+        </div>
+        <div class="date-item">
+            <div class="date-label">Вернуть до:</div>
+            <div class="date-value">19.12.2024</div>
+        </div>
+    </div>
+    
+    <div class="book-actions">
+        <button class="action-btn" onclick="openRatingModal('Братья Карамазовы')">
+            ⭐ Оценить
+        </button>
+        <button class="action-btn review">
+            💬 Написать отзыв
+        </button>
+    </div>
+</div>
               
                <!-- Книга 4 -->
                <div class="book-card">
@@ -970,6 +1007,119 @@ document.addEventListener('DOMContentLoaded', function() {
        });
    });
 });
+
+// Функция фильтрации книг
+function filterBooks(status) {
+    const bookCards = document.querySelectorAll('.book-card');
+    const periodDividers = document.querySelectorAll('.period-divider');
+    let visibleBooksCount = 0;
+
+    bookCards.forEach(card => {
+        const statusBadge = card.querySelector('.status-badge');
+        const statusText = statusBadge.textContent.toLowerCase();
+        
+        let shouldShow = false;
+        
+        switch(status) {
+            case 'all':
+                shouldShow = true;
+                break;
+            case 'returned':
+                shouldShow = statusText.includes('сдана') || statusText.includes('продлена');
+                break;
+            case 'reading':
+                shouldShow = statusText.includes('на руках') || statusText.includes('продлена');
+                break;
+            case 'overdue':
+                shouldShow = statusText.includes('просрочена');
+                break;
+        }
+        
+        if (shouldShow) {
+            card.style.display = 'block';
+            visibleBooksCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Скрываем разделители периодов, если под ними нет видимых книг
+    periodDividers.forEach(divider => {
+        const nextElements = getNextElements(divider);
+        const hasVisibleBooks = nextElements.some(el => 
+            el.classList.contains('book-card') && el.style.display !== 'none'
+        );
+        
+        if (hasVisibleBooks) {
+            divider.style.display = 'block';
+        } else {
+            divider.style.display = 'none';
+        }
+    });
+
+    // Показываем сообщение, если нет книг
+    showEmptyState(visibleBooksCount === 0);
+}
+
+// Вспомогательная функция для получения следующих элементов
+function getNextElements(element) {
+    const elements = [];
+    let nextElement = element.nextElementSibling;
+    
+    while (nextElement && !nextElement.classList.contains('period-divider')) {
+        elements.push(nextElement);
+        nextElement = nextElement.nextElementSibling;
+    }
+    
+    return elements;
+}
+
+// Функция показа сообщения о пустом состоянии
+function showEmptyState(show) {
+    let emptyState = document.querySelector('.empty-state');
+    
+    if (show && !emptyState) {
+        emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.innerHTML = `
+            <div class="empty-icon">📚</div>
+            <div class="empty-text">Книги не найдены</div>
+        `;
+        document.querySelector('.books-list').appendChild(emptyState);
+    } else if (!show && emptyState) {
+        emptyState.remove();
+    }
+}
+
+// Обновите обработчики для фильтров
+document.querySelectorAll('.filter').forEach(filter => {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filterType = this.textContent.toLowerCase();
+        let status = 'all';
+        
+        switch(filterType) {
+            case 'сданы':
+                status = 'returned';
+                break;
+            case 'на руках':
+                status = 'reading';
+                break;
+            case 'просрочены':
+                status = 'overdue';
+                break;
+            default:
+                status = 'all';
+        }
+        
+        filterBooks(status);
+    });
+});
+
+// Обновите HTML для корректной работы фильтрации
+// Добавьте data-атрибуты к книгам для более точной фильтрации
    </script>
   
 </body>
