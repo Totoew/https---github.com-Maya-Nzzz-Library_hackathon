@@ -336,8 +336,6 @@
             font-size: 24px;
             font-weight: bold;
             position: relative;
-            background-size: cover;
-            background-position: center;
         }
         
         .edit-avatar-btn {
@@ -354,7 +352,6 @@
             font-size: 14px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 2;
         }
         
         .profile-name {
@@ -568,12 +565,6 @@
         .action-btn.secondary:hover {
             background: #66BB6A;
         }
-
-        .action-btn:disabled {
-            background: #BDBDBD;
-            cursor: not-allowed;
-            transform: none;
-        }
         
         /* Скрытые элементы */
         .tab-content {
@@ -609,9 +600,22 @@
             <div class="header-title" id="headerTitle">Мой профиль</div>
             <div class="header-icons">
                 <span>🔔</span>
+                <button class="logout-btn" onclick="logout()" style="
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 6px 12px;
+                border-radius: 15px;
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-left: 10px;
+            ">Выйти</button>
             </div>
         </div>
         
+        <!-- ИЗМЕНЕНИЕ: Сделана активной вкладка "Профиль" по умолчанию -->
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('profile')">Профиль</button>
             <button class="nav-tab" onclick="showTab('notifications')">Уведомления</button>
@@ -636,10 +640,11 @@
             </div>
             
             <!-- Вкладка профиля -->
+            <!-- ИЗМЕНЕНИЕ: Сделана активной по умолчанию -->
             <div class="tab-content active" id="profileTab">
                 <!-- Профиль пользователя -->
                 <div class="profile-section">
-                    <div class="avatar" id="userAvatar" style="background-image: none;">
+                    <div class="avatar">
                         ИИ
                         <button class="edit-avatar-btn" onclick="openEditModal()">📷</button>
                     </div>
@@ -705,69 +710,12 @@
                                 <div class="book-details">
                                     <div class="book-detail">
                                         <span>⏳</span>
-                                        Вернуть до: <span class="return-date">20.12.2024</span>
-                                    </div>
-                                    <div class="book-detail">
-                                        <span>🔄</span>
-                                        Последнее продление: <span class="last-extension">13.12.2024</span>
+                                        Вернуть до: 20.12.2024
                                     </div>
                                 </div>
                                 <div class="book-actions">
-                                    <button class="action-btn" onclick="extendBook(this)">Продлить</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Книга 2 -->
-                        <div class="book-card">
-                            <div class="book-cover">М и М</div>
-                            <div class="book-info">
-                                <div class="book-header">
-                                    <div>
-                                        <div class="book-title">Мастер и Маргарита</div>
-                                        <div class="book-author">Михаил Булгаков</div>
-                                    </div>
-                                    <div class="book-status warning">Скоро срок</div>
-                                </div>
-                                <div class="book-details">
-                                    <div class="book-detail">
-                                        <span>⏳</span>
-                                        Вернуть до: <span class="return-date">15.12.2024</span>
-                                    </div>
-                                    <div class="book-detail">
-                                        <span>🔄</span>
-                                        Последнее продление: <span class="last-extension">08.12.2024</span>
-                                    </div>
-                                </div>
-                                <div class="book-actions">
-                                    <button class="action-btn" onclick="extendBook(this)">Продлить</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Книга 3 -->
-                        <div class="book-card">
-                            <div class="book-cover">1984</div>
-                            <div class="book-info">
-                                <div class="book-header">
-                                    <div>
-                                        <div class="book-title">1984</div>
-                                        <div class="book-author">Джордж Оруэлл</div>
-                                    </div>
-                                    <div class="book-status danger">Просрочена</div>
-                                </div>
-                                <div class="book-details">
-                                    <div class="book-detail">
-                                        <span>⏳</span>
-                                        Вернуть до: <span class="return-date">10.12.2024</span>
-                                    </div>
-                                    <div class="book-detail">
-                                        <span>⚠️</span>
-                                        Просрочено на 5 дней
-                                    </div>
-                                </div>
-                                <div class="book-actions">
-                                    <button class="action-btn" onclick="extendBook(this)" disabled>Нельзя продлить</button>
+                                    <button class="action-btn">Продлить</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -834,415 +782,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно редактирования профиля -->
-    <div class="modal-overlay" id="editProfileModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">Редактирование профиля</div>
-                <button class="modal-close" onclick="closeEditModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <!-- Редактирование фотографии -->
-                <div class="form-section">
-                    <div class="section-title">
-                        <span class="icon">📷</span>
-                        Фотография профиля
-                    </div>
-                    
-                    <div class="avatar-preview-container" style="text-align: center; margin-bottom: 20px;">
-                        <div class="avatar-preview" id="avatarPreview" style="width: 100px; height: 100px; background: linear-gradient(135deg, #4CAF50, #81C784); border-radius: 50%; margin: 0 auto 15px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold;">
-                            ИИ
-                        </div>
-                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
-                        <button class="btn btn-secondary" onclick="document.getElementById('avatarInput').click()" style="margin: 5px;">
-                            📁 Выбрать фото
-                        </button>
-                        <button class="btn btn-secondary" onclick="takePhoto()" style="margin: 5px;">
-                            📷 Сделать фото
-                        </button>
-                        <button class="btn btn-secondary" onclick="removeAvatar()" style="margin: 5px;">
-                            🗑️ Удалить фото
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Основная информация -->
-                <!-- Основная информация -->
-<div class="form-section" id="personalInfoSection">
-    <div class="section-title">
-        <span class="icon">👤</span>
-        Основная информация
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label required">Фамилия</label>
-        <input type="text" class="form-input" id="lastName" placeholder="Введите фамилию" readonly>
-        <div class="error-message" id="lastNameError">Пожалуйста, введите фамилию</div>
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label required">Имя</label>
-        <input type="text" class="form-input" id="firstName" placeholder="Введите имя" readonly>
-        <div class="error-message" id="firstNameError">Пожалуйста, введите имя</div>
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label">Отчество</label>
-        <input type="text" class="form-input" id="middleName" placeholder="Введите отчество" readonly>
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label">Дата рождения</label>
-        <input type="date" class="form-input" id="birthDate" readonly>
-    </div>
-</div>
-
-<!-- Контактная информация -->
-<div class="form-section">
-    <div class="section-title">
-        <span class="icon">📞</span>
-        Контактная информация
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label required">Номер телефона</label>
-        <input type="tel" class="form-input" id="phone" placeholder="+7 (___) ___-__-__" readonly>
-        <div class="error-message" id="phoneError">Введите корректный номер телефона</div>
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="email" placeholder="email@example.com" readonly>
-        <div class="error-message" id="emailError">Введите корректный email</div>
-    </div>
-    
-    <div class="form-group">
-        <label class="form-label">Адрес проживания</label>
-        <input type="text" class="form-input" id="address" placeholder="Город, улица, дом, квартира" readonly>
-    </div>
-</div>
-
-                
-               <style>
-                .form-input[readonly] {
-                        background-color: #f5f5f5;
-                        color: #666;
-                        cursor: not-allowed;
-                        border-color: #ddd;
-                    }
-
-                    .form-input[readonly]:focus {
-                        border-color: #ddd;
-                        box-shadow: none;
-                    }
-               </style>
-
-                <div class="modal-actions">
-                    <button class="btn btn-secondary" onclick="closeEditModal()">Отмена</button>
-                    <button class="btn btn-primary" onclick="saveProfile()">Сохранить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        /* Стили для модального окна */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 0;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            background: #4CAF50;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .form-section {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .form-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .form-label.required::after {
-            content: " *";
-            color: #f44336;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .form-input.error {
-            border-color: #f44336;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-        }
-
-        .btn-primary {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #45a049;
-        }
-
-        .btn-secondary {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-    </style>
-
-    <script>
-        // Переменная для хранения выбранного аватара
-        let selectedAvatar = null;
-
-        // Функции для работы с аватаром
-        function previewAvatar(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedAvatar = e.target.result;
-                    document.getElementById('avatarPreview').style.backgroundImage = `url(${e.target.result})`;
-                    document.getElementById('avatarPreview').textContent = '';
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function takePhoto() {
-            alert('Функция "Сделать фото" будет доступна в мобильном приложении');
-            // В реальном приложении здесь будет код для доступа к камере
-        }
-
-        function removeAvatar() {
-            selectedAvatar = null;
-            document.getElementById('avatarPreview').style.backgroundImage = 'none';
-            document.getElementById('avatarPreview').textContent = 'ИИ';
-            document.getElementById('avatarInput').value = '';
-        }
-
-        // Функции для модального окна
-        function openEditModal() {
-            // Заполняем форму текущими данными
-            document.getElementById('lastName').value = 'Иванов';
-            document.getElementById('firstName').value = 'Иван';
-            document.getElementById('middleName').value = 'Иванович';
-            document.getElementById('phone').value = '+7 (912) 345-67-89';
-            document.getElementById('email').value = 'ivanov@email.com';
-            document.getElementById('address').value = 'ул. Ленина, 25, кв. 14, Екатеринбург';
-            
-            // Сбрасываем предпросмотр аватара
-            const currentAvatar = document.getElementById('userAvatar').style.backgroundImage;
-            if (currentAvatar && currentAvatar !== 'none') {
-                document.getElementById('avatarPreview').style.backgroundImage = currentAvatar;
-                document.getElementById('avatarPreview').textContent = '';
-            } else {
-                document.getElementById('avatarPreview').style.backgroundImage = 'none';
-                document.getElementById('avatarPreview').textContent = 'ИИ';
-            }
-            selectedAvatar = null;
-            document.getElementById('avatarInput').value = '';
-            
-            // Показываем модальное окно
-            document.getElementById('editProfileModal').style.display = 'flex';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editProfileModal').style.display = 'none';
-            clearErrors();
-        }
-
-        function saveProfile() {
-    // Обновляем аватар если выбран новый
-    if (selectedAvatar) {
-        const userAvatar = document.getElementById('userAvatar');
-        userAvatar.style.backgroundImage = `url(${selectedAvatar})`;
-        userAvatar.textContent = '';
-        
-        // Показываем уведомление об успешном сохранении
-        alert('Фотография профиля успешно обновлена!');
-    } else {
-        alert('Изменения сохранены!');
-    }
-    
-    // Закрываем модальное окно
-    closeEditModal();
-}
-
-        // function validateForm() {
-        //     let isValid = true;
-        //     clearErrors();
-
-        //     // Проверка фамилии
-        //     const lastName = document.getElementById('lastName').value.trim();
-        //     if (!lastName) {
-        //         showError('lastName', 'Пожалуйста, введите фамилию');
-        //         isValid = false;
-        //     }
-
-        //     // Проверка имени
-        //     const firstName = document.getElementById('firstName').value.trim();
-        //     if (!firstName) {
-        //         showError('firstName', 'Пожалуйста, введите имя');
-        //         isValid = false;
-        //     }
-
-        //     // Проверка телефона
-        //     const phone = document.getElementById('phone').value.trim();
-        //     const phoneRegex = /^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
-        //     if (!phoneRegex.test(phone)) {
-        //         showError('phone', 'Введите корректный номер телефона');
-        //         isValid = false;
-        //     }
-
-        //     // Проверка email (если заполнен)
-        //     const email = document.getElementById('email').value.trim();
-        //     if (email) {
-        //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        //         if (!emailRegex.test(email)) {
-        //             showError('email', 'Введите корректный email');
-        //             isValid = false;
-        //         }
-        //     }
-
-        //     return isValid;
-        // }
-
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const errorElement = document.getElementById(fieldId + 'Error');
-            
-            field.classList.add('error');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
-
-        function clearErrors() {
-            const errorMessages = document.querySelectorAll('.error-message');
-            const errorInputs = document.querySelectorAll('.form-input.error');
-            
-            errorMessages.forEach(error => {
-                error.style.display = 'none';
-            });
-            
-            errorInputs.forEach(input => {
-                input.classList.remove('error');
-            });
-        }
-
-        // Закрытие модального окна при клике вне его
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('editProfileModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeEditModal();
-                }
-            });
-        });
-
-        // Остальной JavaScript код (функции продления книг, уведомлений и т.д.)
-        // ... [остальной код остается без изменений]
-    </script>
-
     <script>
         // Подсветка активной страницы
         document.addEventListener('DOMContentLoaded', function() {
@@ -1256,108 +795,6 @@
                 }
             });
         });
-
-        // Функция проверки возможности продления
-        function canExtendBook(bookCard) {
-            const statusElement = bookCard.querySelector('.book-status');
-            const lastExtensionElement = bookCard.querySelector('.last-extension');
-            const returnDateElement = bookCard.querySelector('.return-date');
-            
-            // Проверяем, не просрочена ли книга
-            const returnDate = new Date(returnDateElement.textContent.split('.').reverse().join('-'));
-            const today = new Date();
-            
-            if (returnDate < today) {
-                return { canExtend: false, reason: 'Книга просрочена и не может быть продлена' };
-            }
-            
-            // Проверяем, прошла ли неделя с последнего продления
-            if (lastExtensionElement) {
-                const lastExtensionDate = new Date(lastExtensionElement.textContent.split('.').reverse().join('-'));
-                const daysSinceLastExtension = Math.floor((today - lastExtensionDate) / (1000 * 60 * 60 * 24));
-                
-                if (daysSinceLastExtension < 7) {
-                    const daysLeft = 7 - daysSinceLastExtension;
-                    return { 
-                        canExtend: false, 
-                        reason: `Можно продлить только раз в неделю. Следующее продление через ${daysLeft} ${daysLeft === 1 ? 'день' : daysLeft < 5 ? 'дня' : 'дней'}` 
-                    };
-                }
-            }
-            
-            return { canExtend: true, reason: '' };
-        }
-
-        // Функция продления книги
-        function extendBook(button) {
-            const bookCard = button.closest('.book-card');
-            const bookTitle = bookCard.querySelector('.book-title').textContent;
-            
-            // Проверяем возможность продления
-            const extensionCheck = canExtendBook(bookCard);
-            
-            if (!extensionCheck.canExtend) {
-                alert(extensionCheck.reason);
-                return;
-            }
-            
-            const returnDateElement = bookCard.querySelector('.return-date');
-            const lastExtensionElement = bookCard.querySelector('.last-extension');
-            const currentDate = new Date(returnDateElement.textContent.split('.').reverse().join('-'));
-            
-            // Подтверждение продления
-            const confirmExtend = confirm(`Вы уверены, что хотите продлить книгу "${bookTitle}" на 2 недели?`);
-            
-            if (confirmExtend) {
-                // Визуальная обратная связь
-                const originalText = button.textContent;
-                button.textContent = '⏳';
-                button.disabled = true;
-                
-                setTimeout(() => {
-                    // Добавляем 2 недели к текущей дате
-                    const newDate = new Date(currentDate);
-                    newDate.setDate(newDate.getDate() + 14);
-                    
-                    // Форматируем дату в формат DD.MM.YYYY
-                    const formattedDate = newDate.toLocaleDateString('ru-RU', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                    
-                    // Обновляем дату возврата в интерфейсе
-                    returnDateElement.textContent = formattedDate;
-                    
-                    // Обновляем дату последнего продления
-                    const todayFormatted = new Date().toLocaleDateString('ru-RU', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                    if (lastExtensionElement) {
-                        lastExtensionElement.textContent = todayFormatted;
-                    }
-                    
-                    // Обновляем статус книги
-                    const statusElement = bookCard.querySelector('.book-status');
-                    statusElement.textContent = 'На руках';
-                    statusElement.className = 'book-status'; // Сбрасываем классы статуса
-                    
-                    button.textContent = '✅ Продлено';
-                    button.style.background = '#81C784';
-                    
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '';
-                        button.disabled = false;
-                        
-                        // Показываем уведомление об успешном продлении
-                        alert(`Книга "${bookTitle}" успешно продлена!\nНовый срок возврата: ${formattedDate}`);
-                    }, 1500);
-                }, 1000);
-            }
-        }
 
         // Данные уведомлений
         const notificationsData = [
@@ -1437,6 +874,15 @@
                 ]
             }
         ];
+
+        // ФУНКЦИЯ ВЫХОДА
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                localStorage.removeItem('currentUser');
+                // Перенаправляем на страницу авторизации
+                window.location.href = '../authorization.html';
+            }
+        }
 
         // Показать вкладку
         function showTab(tabName) {
@@ -1575,8 +1021,16 @@
             }, 1000);
         }
 
+        // Функции профиля (заглушки)
+        function openEditModal() {
+            alert('Форма редактирования профиля');
+        }
+
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
+            // ИЗМЕНЕНИЕ: Не загружаем уведомления сразу, т.к. активна вкладка профиля
+            // renderNotifications();
+            
             // Анимация появления уведомлений (будет работать при переходе на вкладку)
             setTimeout(() => {
                 const notifications = document.querySelectorAll('.notification-card');
@@ -1592,6 +1046,368 @@
                 });
             }, 100);
         });
+
+        // Обработчики для кнопок в профиле
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const action = this.textContent;
+                    const bookTitle = this.closest('.book-card').querySelector('.book-title').textContent;
+                    
+                    const originalText = this.textContent;
+                    this.textContent = '⏳';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        this.textContent = '✅';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.disabled = false;
+                            alert(`${action} для "${bookTitle}" выполнено!`);
+                        }, 1000);
+                    }, 1000);
+                });
+            });
+        });
     </script>
+
+    <!-- Модальное окно редактирования профиля -->
+<div class="modal-overlay" id="editProfileModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Редактирование профиля</div>
+            <button class="modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Основная информация -->
+            <div class="form-section" id="personalInfoSection">
+                <div class="section-title">
+                    <span class="icon">👤</span>
+                    Основная информация
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Фамилия</label>
+                    <input type="text" class="form-input" id="lastName" placeholder="Введите фамилию">
+                    <div class="error-message" id="lastNameError">Пожалуйста, введите фамилию</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Имя</label>
+                    <input type="text" class="form-input" id="firstName" placeholder="Введите имя">
+                    <div class="error-message" id="firstNameError">Пожалуйста, введите имя</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Отчество</label>
+                    <input type="text" class="form-input" id="middleName" placeholder="Введите отчество">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Дата рождения</label>
+                    <input type="date" class="form-input" id="birthDate">
+                </div>
+            </div>
+            
+            <!-- Контактная информация -->
+            <div class="form-section">
+                <div class="section-title">
+                    <span class="icon">📞</span>
+                    Контактная информация
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">Номер телефона</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="+7 (___) ___-__-__">
+                    <div class="error-message" id="phoneError">Введите корректный номер телефона</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="email" placeholder="email@example.com">
+                    <div class="error-message" id="emailError">Введите корректный email</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Адрес проживания</label>
+                    <input type="text" class="form-input" id="address" placeholder="Город, улица, дом, квартира">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Отмена</button>
+                <button class="btn btn-primary" onclick="saveProfile()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Стили для модального окна */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 0;
+        width: 90%;
+        max-width: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        background: #4CAF50;
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .form-label.required::after {
+        content: " *";
+        color: #f44336;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+    }
+
+    .error-message {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .form-input.error {
+        border-color: #f44336;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .btn-primary {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #45a049;
+    }
+
+    .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #e0e0e0;
+    }
+</style>
+
+<script>
+    // Функции для модального окна
+    function openEditModal() {
+        // Заполняем форму текущими данными
+        document.getElementById('lastName').value = 'Иванов';
+        document.getElementById('firstName').value = 'Иван';
+        document.getElementById('middleName').value = 'Иванович';
+        document.getElementById('phone').value = '+7 (912) 345-67-89';
+        document.getElementById('email').value = 'ivanov@email.com';
+        document.getElementById('address').value = 'ул. Ленина, 25, кв. 14, Екатеринбург';
+        
+        // Показываем модальное окно
+        document.getElementById('editProfileModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProfileModal').style.display = 'none';
+        clearErrors();
+    }
+
+    function saveProfile() {
+        // Валидация формы
+        if (validateForm()) {
+            // Получаем данные из формы
+            const lastName = document.getElementById('lastName').value;
+            const firstName = document.getElementById('firstName').value;
+            const middleName = document.getElementById('middleName').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            
+            // Обновляем данные в профиле
+            document.querySelector('.profile-name').textContent = `${firstName} ${lastName}`;
+            
+            // Обновляем контактную информацию
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems[0].querySelector('div:last-child').textContent = phone;
+            contactItems[1].querySelector('div:last-child').textContent = email;
+            contactItems[2].querySelector('div:last-child').textContent = address;
+            
+            // Показываем уведомление об успешном сохранении
+            alert('Профиль успешно сохранен!');
+            
+            // Закрываем модальное окно
+            closeEditModal();
+        }
+    }
+
+    function validateForm() {
+        let isValid = true;
+        clearErrors();
+
+        // Проверка фамилии
+        const lastName = document.getElementById('lastName').value.trim();
+        if (!lastName) {
+            showError('lastName', 'Пожалуйста, введите фамилию');
+            isValid = false;
+        }
+
+        // Проверка имени
+        const firstName = document.getElementById('firstName').value.trim();
+        if (!firstName) {
+            showError('firstName', 'Пожалуйста, введите имя');
+            isValid = false;
+        }
+
+        // Проверка телефона
+        const phone = document.getElementById('phone').value.trim();
+        const phoneRegex = /^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
+        if (!phoneRegex.test(phone)) {
+            showError('phone', 'Введите корректный номер телефона');
+            isValid = false;
+        }
+
+        // Проверка email (если заполнен)
+        const email = document.getElementById('email').value.trim();
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('email', 'Введите корректный email');
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
+    function showError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        const errorElement = document.getElementById(fieldId + 'Error');
+        
+        field.classList.add('error');
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+
+    function clearErrors() {
+        const errorMessages = document.querySelectorAll('.error-message');
+        const errorInputs = document.querySelectorAll('.form-input.error');
+        
+        errorMessages.forEach(error => {
+            error.style.display = 'none';
+        });
+        
+        errorInputs.forEach(input => {
+            input.classList.remove('error');
+        });
+    }
+
+    // Закрытие модального окна при клике вне его
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editProfileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+    });
+</script>
 </body>
 </html>

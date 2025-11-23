@@ -15,14 +15,6 @@
     flex-shrink: 0;
 }
 
-.action-btn.view-review {
-    background: #9C27B0;
-}
-
-.action-btn.view-review:hover {
-    background: #7B1FA2;
-}
-
 .nav-item {
     display: flex;
     flex-direction: column;
@@ -529,11 +521,11 @@
                     </div>
                     
                     <div class="book-actions">
-                                                <button class="action-btn rated" disabled>
+                        <button class="action-btn rated" disabled>
                             ✅ Оценена: 5⭐
                         </button>
-                        <button class="action-btn view-review" onclick="openViewReviewModal('1984')">
-                            👁️ Посмотреть отзыв
+                        <button class="action-btn review">
+                            💬 Написать отзыв
                         </button>
                     </div>
                 </div>
@@ -607,8 +599,8 @@
                         <button class="action-btn rated" disabled>
                             ✅ Оценена: 4⭐
                         </button>
-                        <button class="action-btn view-review" onclick="openViewReviewModal('Анна Каренина')">
-                            👁️ Посмотреть отзыв
+                        <button class="action-btn review">
+                            💬 Редактировать отзыв
                         </button>
                     </div>
                 </div>
@@ -679,65 +671,27 @@
     </div>
 
     <!-- Модальное окно оценки -->
-    <!-- Модальное окно оценки -->
-<div id="ratingModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-title" id="modalBookTitle">Оценить книгу</div>
-        <div id="modalBookAuthor"></div>
-        
-        <div class="rating-stars" id="ratingStars">
-            <span class="star" data-rating="1">★</span>
-            <span class="star" data-rating="2">★</span>
-            <span class="star" data-rating="3">★</span>
-            <span class="star" data-rating="4">★</span>
-            <span class="star" data-rating="5">★</span>
-        </div>
-        
-        <div id="ratingValue">Выберите оценку</div>
-        
-        <div class="modal-actions">
-            <button class="modal-btn secondary" onclick="closeRatingModal()">Отмена</button>
-            <button class="modal-btn primary" id="submitRating" onclick="submitRating()">Оценить</button>
-        </div>
-    </div>
-</div>
-
-<!-- Модальное окно комментария -->
-<div id="reviewModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-title" id="reviewBookTitle">Написать отзыв</div>
-        <div id="reviewBookAuthor"></div>
-        
-        <textarea 
-            id="reviewText" 
-            placeholder="Напишите ваш отзыв о книге..." 
-            rows="5"
-            style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; resize: vertical; margin: 15px 0;"
-        ></textarea>
-        
-        <div class="modal-actions">
-            <button class="modal-btn secondary" onclick="closeReviewModal()">Отмена</button>
-            <button class="modal-btn primary" onclick="submitReview()">Сохранить отзыв</button>
+    <div id="ratingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalBookTitle">Оценить книгу</div>
+            <div id="modalBookAuthor"></div>
+            
+            <div class="rating-stars" id="ratingStars">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+            
+            <div id="ratingValue">Выберите оценку</div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeRatingModal()">Отмена</button>
+                <button class="modal-btn primary" id="submitRating" onclick="submitRating()">Оценить</button>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- Модальное окно просмотра комментария -->
-<div id="viewReviewModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-title" id="viewReviewBookTitle">Ваш отзыв</div>
-        <div id="viewReviewBookAuthor"></div>
-        
-        <div id="viewReviewText" style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin: 15px 0; min-height: 100px; font-size: 14px; line-height: 1.4;">
-            <!-- Текст отзыва будет здесь -->
-        </div>
-        
-        <div class="modal-actions">
-            <button class="modal-btn secondary" onclick="closeViewReviewModal()">Закрыть</button>
-            <button class="modal-btn primary" onclick="editReview()">Редактировать</button>
-        </div>
-    </div>
-</div>
 
     <script>
         // Подсветка активной страницы
@@ -753,198 +707,105 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
         let currentRating = 0;
-let currentBookTitle = '';
-let currentReviewBookTitle = '';
-let bookReviews = {
-    '1984': 'Отличная книга, рекомендую к прочтению!',
-    'Анна Каренина': 'Классика, которая никогда не устаревает.',
-    'Война и мир': 'Великое произведение, перечитываю каждый год.'
-}; // Хранилище отзывов
-
-// Функции для модального окна оценки
-function openRatingModal(bookTitle) {
-    currentBookTitle = bookTitle;
-    document.getElementById('modalBookTitle').textContent = `Оценить "${bookTitle}"`;
-    document.getElementById('ratingModal').style.display = 'flex';
-    currentRating = 0;
-    updateStars();
-}
-
-function closeRatingModal() {
-    document.getElementById('ratingModal').style.display = 'none';
-}
-
-function updateStars() {
-    const stars = document.querySelectorAll('.star');
-    stars.forEach((star, index) => {
-        if (index < currentRating) {
-            star.classList.add('active');
-        } else {
-            star.classList.remove('active');
-        }
-    });
-    
-    const ratingText = document.getElementById('ratingValue');
-    if (currentRating === 0) {
-        ratingText.textContent = 'Выберите оценку';
-        ratingText.style.color = '#7D7D7D';
-    } else {
-        ratingText.textContent = `Ваша оценка: ${currentRating} из 5`;
-        ratingText.style.color = '#4CAF50';
-    }
-}
-
-function submitRating() {
-    if (currentRating === 0) {
-        alert('Пожалуйста, выберите оценку');
-        return;
-    }
-    
-    // Обновляем кнопку в интерфейсе
-    const bookCard = findBookCard(currentBookTitle);
-    if (bookCard) {
-        const ratingBtn = bookCard.querySelector('.action-btn:not(.review):not(.view-review)');
-        if (ratingBtn) {
-            ratingBtn.innerHTML = `✅ Оценена: ${currentRating}⭐`;
-            ratingBtn.disabled = true;
-            ratingBtn.classList.add('rated');
-        }
-    }
-    
-    alert(`Спасибо! Вы поставили оценку ${currentRating}⭐ книге "${currentBookTitle}"`);
-    closeRatingModal();
-}
-
-// Функции для модального окна комментария
-function openReviewModal(bookTitle) {
-    currentReviewBookTitle = bookTitle;
-    document.getElementById('reviewBookTitle').textContent = `Написать отзыв на "${bookTitle}"`;
-    document.getElementById('reviewText').value = bookReviews[bookTitle] || '';
-    document.getElementById('reviewModal').style.display = 'flex';
-}
-
-function closeReviewModal() {
-    document.getElementById('reviewModal').style.display = 'none';
-}
-
-function submitReview() {
-    const reviewText = document.getElementById('reviewText').value.trim();
-    
-    if (!reviewText) {
-        alert('Пожалуйста, напишите отзыв');
-        return;
-    }
-    
-    // Сохраняем отзыв
-    bookReviews[currentReviewBookTitle] = reviewText;
-    
-    // Обновляем кнопку в интерфейсе
-    const bookCard = findBookCard(currentReviewBookTitle);
-    if (bookCard) {
-        const reviewBtn = bookCard.querySelector('.action-btn.review');
-        if (reviewBtn) {
-            reviewBtn.innerHTML = '👁️ Посмотреть отзыв';
-            reviewBtn.classList.remove('review');
-            reviewBtn.classList.add('view-review');
-            reviewBtn.onclick = function() { openViewReviewModal(currentReviewBookTitle); };
-        }
-    }
-    
-    alert('Отзыв успешно сохранен!');
-    closeReviewModal();
-}
-
-// Функции для просмотра комментария
-function openViewReviewModal(bookTitle) {
-    currentReviewBookTitle = bookTitle;
-    document.getElementById('viewReviewBookTitle').textContent = `Ваш отзыв на "${bookTitle}"`;
-    document.getElementById('viewReviewText').textContent = bookReviews[bookTitle] || 'Отзыв не найден';
-    document.getElementById('viewReviewModal').style.display = 'flex';
-}
-
-function closeViewReviewModal() {
-    document.getElementById('viewReviewModal').style.display = 'none';
-}
-
-function editReview() {
-    closeViewReviewModal();
-    openReviewModal(currentReviewBookTitle);
-}
-
-// Вспомогательная функция для поиска карточки книги
-function findBookCard(bookTitle) {
-    const bookCards = document.querySelectorAll('.book-card');
-    for (let card of bookCards) {
-        if (card.querySelector('.book-title').textContent === bookTitle) {
-            return card;
-        }
-    }
-    return null;
-}
-
-// Инициализация звезд рейтинга
-document.querySelectorAll('.star').forEach(star => {
-    star.addEventListener('click', function() {
-        currentRating = parseInt(this.getAttribute('data-rating'));
-        updateStars();
-    });
-    
-    star.addEventListener('mouseover', function() {
-        const hoverRating = parseInt(this.getAttribute('data-rating'));
-        const stars = document.querySelectorAll('.star');
-        stars.forEach((s, index) => {
-            if (index < hoverRating) {
-                s.style.color = '#FFD700';
-            }
-        });
-    });
-    
-    star.addEventListener('mouseout', function() {
-        updateStars();
-    });
-});
-
-// Обработчики для кнопок отзывов
-document.querySelectorAll('.action-btn.review').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const bookTitle = this.closest('.book-card').querySelector('.book-title').textContent;
-        openReviewModal(bookTitle);
-    });
-});
-
-// Анимация при загрузке
-document.addEventListener('DOMContentLoaded', function() {
-    const bookCards = document.querySelectorAll('.book-card');
-    bookCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateX(-20px)';
+        let currentBookTitle = '';
         
-        setTimeout(() => {
-            card.style.transition = 'all 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateX(0)';
-        }, 100 * index);
-    });
-    
-    // Подсветка активной страницы
-    const currentPage = window.location.pathname.split('/').pop();
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(item => {
-        const href = item.getAttribute('href');
-        if (href === currentPage) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Обработчики для фильтров
-    document.querySelectorAll('.filter').forEach(filter => {
-        filter.addEventListener('click', function() {
-            document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
-            this.classList.add('active');
+        // Обработчики для фильтров
+        document.querySelectorAll('.filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
-    });
-});
+        
+        // Функции для модального окна оценки
+        function openRatingModal(bookTitle) {
+            currentBookTitle = bookTitle;
+            document.getElementById('modalBookTitle').textContent = `Оценить "${bookTitle}"`;
+            document.getElementById('ratingModal').style.display = 'flex';
+            currentRating = 0;
+            updateStars();
+        }
+        
+        function closeRatingModal() {
+            document.getElementById('ratingModal').style.display = 'none';
+        }
+        
+        function updateStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            const ratingText = document.getElementById('ratingValue');
+            if (currentRating === 0) {
+                ratingText.textContent = 'Выберите оценку';
+                ratingText.style.color = '#7D7D7D';
+            } else {
+                ratingText.textContent = `Ваша оценка: ${currentRating} из 5`;
+                ratingText.style.color = '#4CAF50';
+            }
+        }
+        
+        function submitRating() {
+            if (currentRating === 0) {
+                alert('Пожалуйста, выберите оценку');
+                return;
+            }
+            
+            alert(`Спасибо! Вы поставили оценку ${currentRating}⭐ книге "${currentBookTitle}"`);
+            closeRatingModal();
+            
+            // Здесь можно добавить логику сохранения оценки
+        }
+        
+        // Инициализация звезд рейтинга
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.getAttribute('data-rating'));
+                updateStars();
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const hoverRating = parseInt(this.getAttribute('data-rating'));
+                const stars = document.querySelectorAll('.star');
+                stars.forEach((s, index) => {
+                    if (index < hoverRating) {
+                        s.style.color = '#FFD700';
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                updateStars();
+            });
+        });
+        
+        // Обработчики для кнопок отзывов
+        document.querySelectorAll('.action-btn.review').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const bookTitle = this.closest('.book-card').querySelector('.book-title').textContent;
+                alert(`Открывается форма для написания отзыва на книгу "${bookTitle}"`);
+            });
+        });
+        
+        // Анимация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookCards = document.querySelectorAll('.book-card');
+            bookCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0)';
+                }, 100 * index);
+            });
+        });
     </script>
     
 </body>
